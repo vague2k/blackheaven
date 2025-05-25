@@ -29,12 +29,18 @@ jobs:
     - name: Run tests
       run: |
         set -euo pipefail
-        go test -json -v ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
+        go test -json -v ./... 2>&1 | gotestfmt
 
-    - name: Upload test log
-      uses: actions/upload-artifact@v2
-      if: always()
-      with:
-        name: test-log
-        path: /tmp/gotest.log
-        if-no-files-found: error
+    # uncomment this if you ever need to log tests
+    # - name: Run tests
+    #   run: |
+    #     set -euo pipefail
+    #     go test -json -v ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
+    #
+    # - name: Upload test log
+    #   uses: actions/upload-artifact@v4
+    #   if: always()
+    #   with:
+    #     name: test-log
+    #     path: /tmp/gotest.log
+    #     if-no-files-found: error
