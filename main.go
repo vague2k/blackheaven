@@ -9,11 +9,15 @@ import (
 
 func main() {
 	mux := http.NewServeMux()
+	server := http.Server{
+		Addr:    ":3000",
+		Handler: mux,
+	}
 
 	handler := handlers.NewHandler()
 	mux.HandleFunc("POST /inquiry", handler.InquiryEndpoint)
 
-	err := http.ListenAndServe(":3000", mux)
+	err := server.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
 	}
