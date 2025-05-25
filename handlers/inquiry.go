@@ -13,10 +13,6 @@ type Inquiry struct {
 }
 
 func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
-	if r.Body == nil {
-		respErr(w, http.StatusBadRequest, ErrEOF)
-		return
-	}
 	reqInquiry := &Inquiry{}
 
 	err := json.NewDecoder(r.Body).Decode(reqInquiry)

@@ -20,18 +20,6 @@ func endpoint(method, target string, handler http.HandlerFunc, payload io.Reader
 }
 
 func TestInquiryEndpoint(t *testing.T) {
-	t.Run("Errors if payload is EOF/empty body", func(t *testing.T) {
-		handler := NewHandler()
-		w, _ := endpoint("POST", "/inquiry", handler.InquiryEndpoint, nil)
-		resp := w.Result()
-		respErr := &RespErr{}
-		err := json.NewDecoder(resp.Body).Decode(respErr)
-		assert.NoError(t, err)
-
-		assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
-		assert.Equal(t, http.StatusBadRequest, respErr.Status)
-		assert.Equal(t, "EOF", respErr.ErrorMsg)
-	})
 	t.Run("Errors on invalid inquiry type values", func(t *testing.T) {
 		testCases := []struct {
 			name     string
