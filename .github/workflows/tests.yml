@@ -1,0 +1,40 @@
+name: Tests
+
+on: [ push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix: 
+        go: [stable]
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.go }}
+
+    - name: Install dependencies
+      run: go mod tidy
+
+    - name: Set up gotestfmt
+      run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
+
+    - name: Run tests
+      run: |
+        set -euo pipefail
+        go test -json -v ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
+
+    - name: Upload test log
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: test-log
+        path: /tmp/gotest.log
+        if-no-files-found: error
