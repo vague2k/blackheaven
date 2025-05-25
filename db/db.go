@@ -15,7 +15,6 @@ type DB struct {
 	Sqlite   *sql.DB // Pointer to the underlying sqlite database
 	Dir      string  // The parent directory of the database
 	FilePath string  // the database path
-	version  string
 }
 
 // Initializes the blackheaven db, returning a pointer to the db instance.

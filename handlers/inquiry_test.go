@@ -52,14 +52,15 @@ func TestInquiryEndpoint(t *testing.T) {
 
 		for _, tc := range testCases {
 			t.Run(tc.name, func(t *testing.T) {
-				b, _ := json.Marshal(tc.payload)
+				b, err := json.Marshal(tc.payload)
+				assert.NoError(t, err)
 				handler := NewHandler()
 				w, _ := endpoint("POST", "/inquiry", handler.InquiryEndpoint, bytes.NewBuffer(b))
 				resp := w.Result()
 				defer resp.Body.Close()
 
 				var respErr RespErr
-				err := json.NewDecoder(resp.Body).Decode(&respErr)
+				err = json.NewDecoder(resp.Body).Decode(&respErr)
 				assert.NoError(t, err)
 
 				assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
@@ -73,14 +74,15 @@ func TestInquiryEndpoint(t *testing.T) {
 			"type":    "test",
 			"content": "",
 		}
-		b, _ := json.Marshal(payload)
+		b, err := json.Marshal(payload)
+		assert.NoError(t, err)
 		handler := NewHandler()
 		w, _ := endpoint("POST", "/inquiry", handler.InquiryEndpoint, bytes.NewBuffer(b))
 		resp := w.Result()
 		defer resp.Body.Close()
 
 		var respErr RespErr
-		err := json.NewDecoder(resp.Body).Decode(&respErr)
+		err = json.NewDecoder(resp.Body).Decode(&respErr)
 		assert.NoError(t, err)
 
 		assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
@@ -92,14 +94,15 @@ func TestInquiryEndpoint(t *testing.T) {
 			"type":    "test",
 			"content": "test",
 		}
-		b, _ := json.Marshal(payload)
+		b, err := json.Marshal(payload)
+		assert.NoError(t, err)
 		handler := NewHandler()
 		w, _ := endpoint("POST", "/inquiry", handler.InquiryEndpoint, bytes.NewBuffer(b))
 		resp := w.Result()
 		defer resp.Body.Close()
 
 		var inquiry Inquiry
-		err := json.NewDecoder(resp.Body).Decode(&inquiry)
+		err = json.NewDecoder(resp.Body).Decode(&inquiry)
 		assert.NoError(t, err)
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
