@@ -14,7 +14,7 @@ import (
 )
 
 type Inquiry struct {
-	Type    string `json:"type"`
+	Kind    string `json:"kind"`
 	Email   string `json:"email"`
 	Name    string `json:"name"`
 	Subject string `json:"subject"`
@@ -30,7 +30,7 @@ func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := isValidInquiry(request.Type); err != nil {
+	if err := isValidInquiry(request.Kind); err != nil {
 		respErr(w, http.StatusBadRequest, err.Error())
 		return
 	} else if err := isValidEmail(request.Email); err != nil {
@@ -70,7 +70,7 @@ func isValidInquiry(v string) error {
 	case "submission":
 		return nil
 	case "":
-		return fmt.Errorf("%s", ErrInquiryTypeEmpty)
+		return fmt.Errorf("%s", ErrInquiryKindEmpty)
 	}
 
 	return fmt.Errorf("not a valid inquiry '%s'", v)
