@@ -1,2 +1,9 @@
 **/.DS_Store
-/tmp
+*_templ.go
+output.css
+*_templ.txt
+.DS_Store
+bin
+node_modules
+tmp
+.env

@@ -1,0 +1,6 @@
+{
+  "componentsDir": "ui/components",
+  "utilsDir": "utils",
+  "moduleName": "github.com/vague2k/blackheaven",
+  "jsDir": "assets/js"
+}

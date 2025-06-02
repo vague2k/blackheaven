@@ -14,21 +14,47 @@ import (
 )
 
 type Inquiry struct {
-	Kind    string `json:"kind"`
-	Email   string `json:"email"`
-	Name    string `json:"name"`
-	Subject string `json:"subject"`
-	Content string `json:"content"`
+	Kind     string `json:"kind"`
+	Email    string `json:"email"`
+	Name     string `json:"name"`
+	OrderNum string `json:"order"`
+	Subject  string `json:"subject"`
+	Content  string `json:"content"`
 }
 
 func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
 	request := &Inquiry{}
 
-	err := json.NewDecoder(r.Body).Decode(request)
+	err := r.ParseForm()
 	if err != nil {
 		respErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
+
+	for k, v := range r.Form {
+		switch k {
+		case "kind":
+			request.Kind = v[0]
+		case "email":
+			request.Email = v[0]
+		case "name":
+			request.Name = v[0]
+		case "order":
+			request.OrderNum = v[0]
+		case "subject":
+			request.Subject = v[0]
+		case "content":
+			request.Content = v[0]
+		default:
+			respErr(w, http.StatusBadRequest, "sum went wrong gang")
+			return
+		}
+	}
+	// err := json.NewDecoder(r.Body).Decode(request)
+	// if err != nil {
+	// 	respErr(w, http.StatusBadRequest, err.Error())
+	// 	return
+	// }
 
 	if err := isValidInquiry(request.Kind); err != nil {
 		respErr(w, http.StatusBadRequest, err.Error())
@@ -43,6 +69,9 @@ func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	if request.Name == "" {
 		request.Name = "No name given"
+	}
+	if request.OrderNum == "" {
+		request.OrderNum = "No order number given"
 	}
 	if request.Subject == "" {
 		request.Subject = "New Message"
