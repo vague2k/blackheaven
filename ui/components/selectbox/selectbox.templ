@@ -1,4 +1,4 @@
-// templui component selectbox - version: main installed by templui v0.73.2
+// templui component selectbox - version: main installed by templui v0.74.1
 package selectbox
 
 import (
@@ -129,6 +129,9 @@ templ Trigger(props ...TriggerProps) {
 					name={ p.Name }
 				}
 				required?={ p.Required }
+				if p.Attributes != nil && p.Attributes["name"] != nil {
+					name={ p.Attributes["name"].(string) }
+				}
 			/>
 			{ children... }
 			<span class="pointer-events-none ml-1">
