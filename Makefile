@@ -1,20 +1,18 @@
-all: lint format test
-
-.PHONY: lint
 lint:
 	@echo "Running linter...";
 	@golangci-lint run --color=always;
 
-.PHONY: format
+# uncomment this when gofumpt implements ignore mechanism for go tooling, 
+# see https://github.com/golang/go/issues/42965 for more details
 format:
-	@echo "Running formatter...";
-	@gofumpt -l -w -d .;
+# @echo "Running formatter...";
+# @gofumpt -l -w -d .;
 
-.PHONY: test
 test:
 	@echo "Running tests...";
 	@set -euo pipefail
 	@go test -json $(go list ./... | grep -v '/ui') | tee /tmp/gotest.log | gotestfmt -hide=empty-packages 
+
 templ:
 	@templ generate --watch --proxy="localhost:3000" --open-browser=false
 
@@ -26,3 +24,5 @@ tailwind:
 
 dev:
 	@make -j3 tailwind templ server
+
+vet: lint format test 
