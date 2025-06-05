@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"github.com/a-h/templ"
-	"github.com/vague2k/blackheaven/assets"
 	"github.com/vague2k/blackheaven/handlers"
-	"github.com/vague2k/blackheaven/ui/pages"
+	"github.com/vague2k/blackheaven/internal/assets"
+	"github.com/vague2k/blackheaven/internal/pages"
 )
 
 func main() {
@@ -42,7 +42,7 @@ func SetupAssetsRoutes(mux *http.ServeMux) {
 
 		var fs http.Handler
 		if isDevelopment {
-			fs = http.FileServer(http.Dir("./assets"))
+			fs = http.FileServer(http.Dir("./internal/assets"))
 		} else {
 			fs = http.FileServer(http.FS(assets.Assets))
 		}

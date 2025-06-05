@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/vague2k/blackheaven/ui/components/toast"
+	"github.com/vague2k/blackheaven/internal/components/toast"
 )
 
 type Inquiry struct {

@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/a-h/templ"
-	"github.com/vague2k/blackheaven/ui/components/form"
+	"github.com/vague2k/blackheaven/internal/components/form"
 )
 
 func (h *Handler) ValidateEmailEndpoint(w http.ResponseWriter, r *http.Request) {
