@@ -7,6 +7,7 @@ import (
 	"github.com/vague2k/blackheaven/ui/components/selectbox"
 	"github.com/vague2k/blackheaven/ui/components/textarea"
 	"github.com/vague2k/blackheaven/ui/layouts"
+	"github.com/vague2k/blackheaven/ui/modules"
 )
 
 const FormID = "inquiry-form"
@@ -14,8 +15,8 @@ const FormID = "inquiry-form"
 templ Inquiry() {
 	@layouts.BaseLayout() {
 		<div class="flex justify-center items-center h-screen">
-			<div id="swap-if-form-success">
-				<form class="justify-center items-center min-w-lg space-y-5">
+			<div class="justify-center items-center min-w-lg">
+				<form class="space-y-5">
 					<div class="flex gap-x-3">
 						@form.Item(form.ItemProps{
 							Class: "w-1/2",
@@ -56,6 +57,7 @@ templ Inquiry() {
 								}
 							}
 							@form.Description(form.DescriptionProps{
+								ID:    "inquiry-form-select-box-desc",
 								Class: "text-xs",
 							}) {
 								What kind of inquiry is it?
@@ -64,63 +66,41 @@ templ Inquiry() {
 						@form.Item(form.ItemProps{
 							Class: "w-1/2",
 						}) {
-							@form.Label(form.LabelProps{
-								For: FormID,
-							}) {
-								Email
-							}
-							@input.Input(input.Props{
+							@modules.FormInput(modules.FormInputProps{
+								FormID:      FormID,
 								Name:        "email",
-								Type:        input.TypeEmail,
-								Placeholder: "johnsmith@email.com",
-								Class:       "rounded-sm",
-								Attributes: templ.Attributes{
-									"hx-post":    "inquiry/validate/email",
-									"hx-target":  "#inquiry-email-desc",
-									"hx-trigger": "keyup delay:500ms changed",
+								Label:       "Email",
+								Description: "Enter a valid email",
+								InputProps: input.Props{
+									Placeholder: "johnsmith@email.com",
 								},
 							})
-							@form.Description(form.DescriptionProps{
-								ID:    "inquiry-email-desc",
-								Class: "text-xs mt-2",
-							}) {
-								Enter a valid email
-							}
 						}
 					</div>
 					<div class="flex gap-x-3">
 						@form.Item(form.ItemProps{
 							Class: "w-1/2",
 						}) {
-							@form.Label(form.LabelProps{
-								For: FormID,
-							}) {
-								Name
-							}
-							@input.Input(input.Props{
-								Name:        "name",
-								ID:          FormID,
-								Type:        input.TypeText,
-								Placeholder: "john smith",
-								Class:       "rounded-sm",
-								HasError:    false,
+							@modules.FormInput(modules.FormInputProps{
+								FormID: FormID,
+								Label:  "Name",
+								InputProps: input.Props{
+									Type:        input.TypeText,
+									Placeholder: "John Smith",
+								},
 							})
 						}
 						@form.Item(form.ItemProps{
 							Class: "w-1/2",
 						}) {
-							@form.Label(form.LabelProps{
-								For: FormID,
-							}) {
-								Order #
-							}
-							@input.Input(input.Props{
-								Name:        "name",
-								ID:          FormID,
-								Type:        input.TypeText,
-								Placeholder: "Order # here",
-								Class:       "rounded-sm",
-								HasError:    false,
+							@modules.FormInput(modules.FormInputProps{
+								FormID: FormID,
+								Name:   "order",
+								Label:  "Order #",
+								InputProps: input.Props{
+									Type:        input.TypeText,
+									Placeholder: "Order # here",
+								},
 							})
 						}
 					</div>
@@ -131,6 +111,7 @@ templ Inquiry() {
 							Message
 						}
 						@textarea.Textarea(textarea.Props{
+							ID:          "inquiry-form-content",
 							Name:        "content",
 							Placeholder: "What do you have to say...",
 							AutoResize:  true,
@@ -138,15 +119,15 @@ templ Inquiry() {
 					}
 					@button.Button(button.Props{
 						Attributes: map[string]any{
-							"hx-post":        "/inquiry",
-							"hx-target":      "#swap-if-form-success",
-							"htmx-indicator": "",
+							"hx-post":   "/inquiry",
+							"hx-target": "#inquiry-form-toast",
 						},
 					}) {
 						Submit
 					}
 				</form>
 			</div>
+			<div id="inquiry-form-toast"></div>
 		</div>
 	}
 }

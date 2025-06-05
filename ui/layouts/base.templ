@@ -3,6 +3,7 @@ package layouts
 import "github.com/vague2k/blackheaven/ui/components/selectbox"
 import "github.com/vague2k/blackheaven/ui/components/textarea"
 import "github.com/vague2k/blackheaven/ui/components/popover"
+import "github.com/vague2k/blackheaven/ui/components/toast"
 
 templ BaseLayout() {
 	<!DOCTYPE html>
@@ -19,6 +20,7 @@ templ BaseLayout() {
 			@selectbox.Script()
 			@textarea.Script()
 			@popover.Script()
+			@toast.Script()
 		</head>
 		<body>
 			{ children... }

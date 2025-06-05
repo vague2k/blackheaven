@@ -2,20 +2,55 @@ package modules
 
 import "github.com/vague2k/blackheaven/ui/components/input"
 import "github.com/vague2k/blackheaven/ui/components/form"
+import "fmt"
+import "github.com/vague2k/blackheaven/utils"
 
 type FormInputProps struct {
-	ID            string
-	Description   string
-	Class         string
-	InputProps    input.Props
-	FormDescProps form.DescriptionProps
+	FormID         string
+	Name           string
+	Description    string
+	Label          string
+	Class          string
+	InputProps     input.Props
+	FormLabelProps form.LabelProps
+	FormDescProps  form.DescriptionProps
 }
 
-templ FormInput(props FormInputProps) {
-	<div id={ props.ID } class={ props.Class }>
-		@input.Input(props.InputProps)
-		@form.Description(props.FormDescProps) {
-			{ props.Description }
-		}
-	</div>
+templ FormInput(props ...FormInputProps) {
+	{{ var p FormInputProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	@form.Label(form.LabelProps{
+		ID:            fmt.Sprintf("%s-%s-input-label", p.FormID, p.Name),
+		Class:         p.FormLabelProps.Class,
+		Attributes:    p.FormLabelProps.Attributes,
+		For:           p.FormID,
+		DisabledClass: p.FormLabelProps.DisabledClass,
+	}) {
+		{ p.Label }
+	}
+	@input.Input(input.Props{
+		ID:               fmt.Sprintf("%s-%s-input", p.FormID, p.Name),
+		Class:            utils.TwMerge("rounded-sm", p.FormLabelProps.Class),
+		Attributes:       p.InputProps.Attributes,
+		Name:             p.Name,
+		Type:             p.InputProps.Type,
+		Placeholder:      p.InputProps.Placeholder,
+		Value:            p.InputProps.Value,
+		Disabled:         p.InputProps.Disabled,
+		Readonly:         p.InputProps.Readonly,
+		Required:         p.InputProps.Required,
+		FileAccept:       p.InputProps.FileAccept,
+		HasError:         p.InputProps.HasError,
+		NoTogglePassword: p.InputProps.NoTogglePassword,
+	})
+	@form.Description(form.DescriptionProps{
+		ID:         fmt.Sprintf("%s-%s-input-desc", p.FormID, p.Name),
+		Class:      utils.TwMerge("text-xs mt-2", p.FormLabelProps.Class),
+		Value:      p.FormDescProps.Value,
+		Attributes: p.FormDescProps.Attributes,
+	}) {
+		{ p.Description }
+	}
 }

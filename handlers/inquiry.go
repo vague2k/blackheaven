@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/vague2k/blackheaven/ui/modules"
+	"github.com/vague2k/blackheaven/ui/components/toast"
 )
 
 type Inquiry struct {
@@ -40,19 +40,19 @@ func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
 		case "content":
 			request.Content = v[0]
 		default:
-			respErr(w, http.StatusBadRequest, "sum went wrong gang")
+			showInquiryErrorToast("Internal issue", "an internal server error has occured", w, r)
 			return
 		}
 	}
 
 	if err := isValidInquiry(request.Kind); err != nil {
-		respErr(w, http.StatusBadRequest, err.Error())
+		showInquiryErrorToast("Inquiry Topic", err.Error(), w, r)
 		return
 	} else if err := isValidEmail(request.Email); err != nil {
-		respErr(w, http.StatusBadRequest, err.Error())
+		showInquiryErrorToast("Email", err.Error(), w, r)
 		return
 	} else if request.Content == "" {
-		respErr(w, http.StatusBadRequest, ErrInquiryContentEmpty)
+		showInquiryErrorToast("Content", ErrInquiryContentEmpty, w, r)
 		return
 	}
 
@@ -66,7 +66,17 @@ func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
 		request.Subject = "New Message"
 	}
 
-	modules.InquirySuccess().Render(r.Context(), w)
+	// TODO: setup way to only get here through redirect and not outside source
+
+	// w.Header().Set("HX-Redirect", "/inquiry/success")
+	toast.Toast(toast.Props{
+		Icon:        true,
+		Title:       "Success",
+		Description: "Your form has been submitted",
+		Variant:     "success",
+		Position:    "top-center",
+		Dismissible: true,
+	}).Render(r.Context(), w)
 }
 
 func isValidInquiry(v string) error {
@@ -82,4 +92,15 @@ func isValidInquiry(v string) error {
 	}
 
 	return fmt.Errorf("not a valid inquiry '%s'", v)
+}
+
+func showInquiryErrorToast(title, description string, w http.ResponseWriter, r *http.Request) {
+	toast.Toast(toast.Props{
+		Icon:        true,
+		Title:       title,
+		Description: description,
+		Variant:     "error",
+		Position:    "top-center",
+		Dismissible: true,
+	}).Render(r.Context(), w)
 }
