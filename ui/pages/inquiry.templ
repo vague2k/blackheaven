@@ -14,131 +14,139 @@ const FormID = "inquiry-form"
 templ Inquiry() {
 	@layouts.BaseLayout() {
 		<div class="flex justify-center items-center h-screen">
-			<form class="justify-center items-center min-w-lg space-y-5">
-				<div class="flex gap-x-3">
-					@form.Item(form.ItemProps{
-						Class: "w-1/2",
-					}) {
-						@form.Label(form.LabelProps{
-							For: FormID,
+			<div id="swap-if-form-success">
+				<form class="justify-center items-center min-w-lg space-y-5">
+					<div class="flex gap-x-3">
+						@form.Item(form.ItemProps{
+							Class: "w-1/2",
 						}) {
-							Inquiry Type
-						}
-						@selectbox.SelectBox() {
-							@selectbox.Trigger(selectbox.TriggerProps{
-								Name:     "kind",
-								ID:       FormID,
-								Required: true,
+							@form.Label(form.LabelProps{
+								For: FormID,
 							}) {
-								@selectbox.Value(selectbox.ValueProps{
-									Placeholder: "Inquiry",
-								})
+								Inquiry Type
 							}
-							@selectbox.Content() {
-								@selectbox.Group() {
-									@selectbox.Item(selectbox.ItemProps{
-										Value: "order",
-									}) {
-										Order
-									}
-									@selectbox.Item(selectbox.ItemProps{
-										Value: "release",
-									}) {
-										Release
-									}
-									@selectbox.Item(selectbox.ItemProps{
-										Value: "generic",
-									}) {
-										Generic
+							@selectbox.SelectBox() {
+								@selectbox.Trigger(selectbox.TriggerProps{
+									Name:     "kind",
+									ID:       FormID,
+									Required: true,
+								}) {
+									@selectbox.Value(selectbox.ValueProps{
+										Placeholder: "Inquiry",
+									})
+								}
+								@selectbox.Content() {
+									@selectbox.Group() {
+										@selectbox.Item(selectbox.ItemProps{
+											Value: "order",
+										}) {
+											Order
+										}
+										@selectbox.Item(selectbox.ItemProps{
+											Value: "release",
+										}) {
+											Release
+										}
+										@selectbox.Item(selectbox.ItemProps{
+											Value: "generic",
+										}) {
+											Generic
+										}
 									}
 								}
 							}
+							@form.Description(form.DescriptionProps{
+								Class: "text-xs",
+							}) {
+								What kind of inquiry is it?
+							}
 						}
-						@form.Description(form.DescriptionProps{
-							Class: "text-xs",
+						@form.Item(form.ItemProps{
+							Class: "w-1/2",
 						}) {
-							What kind of inquiry is it?
+							@form.Label(form.LabelProps{
+								For: FormID,
+							}) {
+								Email
+							}
+							@input.Input(input.Props{
+								Name:        "email",
+								Type:        input.TypeEmail,
+								Placeholder: "johnsmith@email.com",
+								Class:       "rounded-sm",
+								Attributes: templ.Attributes{
+									"hx-post":    "inquiry/validate/email",
+									"hx-target":  "#inquiry-email-desc",
+									"hx-trigger": "keyup delay:500ms changed",
+								},
+							})
+							@form.Description(form.DescriptionProps{
+								ID:    "inquiry-email-desc",
+								Class: "text-xs mt-2",
+							}) {
+								Enter a valid email
+							}
 						}
-					}
-					@form.Item(form.ItemProps{
-						Class: "w-1/2",
-					}) {
+					</div>
+					<div class="flex gap-x-3">
+						@form.Item(form.ItemProps{
+							Class: "w-1/2",
+						}) {
+							@form.Label(form.LabelProps{
+								For: FormID,
+							}) {
+								Name
+							}
+							@input.Input(input.Props{
+								Name:        "name",
+								ID:          FormID,
+								Type:        input.TypeText,
+								Placeholder: "john smith",
+								Class:       "rounded-sm",
+								HasError:    false,
+							})
+						}
+						@form.Item(form.ItemProps{
+							Class: "w-1/2",
+						}) {
+							@form.Label(form.LabelProps{
+								For: FormID,
+							}) {
+								Order #
+							}
+							@input.Input(input.Props{
+								Name:        "name",
+								ID:          FormID,
+								Type:        input.TypeText,
+								Placeholder: "Order # here",
+								Class:       "rounded-sm",
+								HasError:    false,
+							})
+						}
+					</div>
+					@form.Item() {
 						@form.Label(form.LabelProps{
 							For: FormID,
 						}) {
-							Email
+							Message
 						}
-						@input.Input(input.Props{
-							Name:        "email",
-							ID:          FormID,
-							Type:        input.TypeEmail,
-							Placeholder: "johnsmith@email.com",
-							Class:       "rounded-sm",
-							HasError:    false,
-						})
-						@form.Description(form.DescriptionProps{
-							Class: "text-xs",
-						}) {
-							Enter a valid email
-						}
-					}
-				</div>
-				<div class="flex gap-x-3">
-					@form.Item(form.ItemProps{
-						Class: "w-1/2",
-					}) {
-						@form.Label(form.LabelProps{
-							For: FormID,
-						}) {
-							Name
-						}
-						@input.Input(input.Props{
-							Name:        "name",
-							ID:          FormID,
-							Type:        input.TypeText,
-							Placeholder: "john smith",
-							Class:       "rounded-sm",
-							HasError:    false,
+						@textarea.Textarea(textarea.Props{
+							Name:        "content",
+							Placeholder: "What do you have to say...",
+							AutoResize:  true,
 						})
 					}
-					@form.Item(form.ItemProps{
-						Class: "w-1/2",
+					@button.Button(button.Props{
+						Attributes: map[string]any{
+							"hx-post":        "/inquiry",
+							"hx-target":      "#swap-if-form-success",
+							"htmx-indicator": "",
+						},
 					}) {
-						@form.Label(form.LabelProps{
-							For: FormID,
-						}) {
-							Order #
-						}
-						@input.Input(input.Props{
-							Name:        "name",
-							ID:          FormID,
-							Type:        input.TypeText,
-							Placeholder: "Order # here",
-							Class:       "rounded-sm",
-							HasError:    false,
-						})
+						Submit
 					}
-				</div>
-				@form.Item() {
-					@form.Label(form.LabelProps{
-						For: FormID,
-					}) {
-						Message
-					}
-					@textarea.Textarea(textarea.Props{
-						Name:        "content",
-						Placeholder: "What do you have to say...",
-						AutoResize:  true,
-					})
-				}
-				@button.Button(button.Props{
-					Attributes: map[string]any{
-						"hx-post": "/inquiry",
-					},
-				}) {
-					Submit
-				}
-			</form>
+				</form>
+			</div>
 		</div>
 	}
 }

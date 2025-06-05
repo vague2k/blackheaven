@@ -20,6 +20,7 @@ func main() {
 
 	handler := handlers.NewHandler()
 	mux.HandleFunc("POST /inquiry", handler.InquiryEndpoint)
+	mux.HandleFunc("POST /inquiry/validate/email", handler.ValidateEmailEndpoint)
 
 	// pages
 	SetupAssetsRoutes(mux)

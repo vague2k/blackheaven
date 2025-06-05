@@ -1,0 +1,21 @@
+package modules
+
+import "github.com/vague2k/blackheaven/ui/components/input"
+import "github.com/vague2k/blackheaven/ui/components/form"
+
+type FormInputProps struct {
+	ID            string
+	Description   string
+	Class         string
+	InputProps    input.Props
+	FormDescProps form.DescriptionProps
+}
+
+templ FormInput(props FormInputProps) {
+	<div id={ props.ID } class={ props.Class }>
+		@input.Input(props.InputProps)
+		@form.Description(props.FormDescProps) {
+			{ props.Description }
+		}
+	</div>
+}
