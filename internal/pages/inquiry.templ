@@ -16,6 +16,7 @@ templ Inquiry() {
 	@layouts.BaseLayout() {
 		<div class="flex justify-center items-center h-screen">
 			<div class="justify-center items-center min-w-lg">
+				@modules.ThemeSwitcher()
 				<form class="space-y-5">
 					<div class="flex gap-x-3">
 						@form.Item(form.ItemProps{
@@ -73,6 +74,13 @@ templ Inquiry() {
 								Description: "Enter a valid email",
 								InputProps: input.Props{
 									Placeholder: "johnsmith@email.com",
+									Attributes: templ.Attributes{
+										"hx-post":              "/inquiry/validate/email",
+										"hx-target":            "#inquiry-form-email-element-container",
+										"hx-trigger":           "keyup delay:500ms changed",
+										"hx-swap":              "outerHTML",
+										"hx-on:htmx:afterSwap": "document.getElementById('inquiry-form-email-input').focus();",
+									},
 								},
 							})
 						}

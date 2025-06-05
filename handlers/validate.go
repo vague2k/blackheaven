@@ -12,6 +12,8 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/vague2k/blackheaven/internal/components/form"
+	"github.com/vague2k/blackheaven/internal/components/input"
+	"github.com/vague2k/blackheaven/internal/modules"
 )
 
 func (h *Handler) ValidateEmailEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -31,16 +33,48 @@ func (h *Handler) ValidateEmailEndpoint(w http.ResponseWriter, r *http.Request) 
 
 	var component templ.Component
 	if err := isValidEmail(email); err != nil {
-		component = form.Description(form.DescriptionProps{
-			ID:    "inquiry-email-desc",
-			Class: "text-xs mt-2 text-destructive",
-			Value: "Not a valid email, try again",
+		form.Description(form.DescriptionProps{})
+		component = modules.FormInput(modules.FormInputProps{
+			FormID:      "inquiry-form",
+			Name:        "email",
+			Label:       "Email",
+			Description: "Not a valid email, please try again",
+			InputProps: input.Props{
+				HasError:    true,
+				Class:       "focus:outline-destructive",
+				Value:       email,
+				Placeholder: "johnsmith@email.com",
+				Attributes: templ.Attributes{
+					"hx-post":              "/inquiry/validate/email",
+					"hx-target":            "#inquiry-form-email-element-container",
+					"hx-trigger":           "keyup delay:500ms changed",
+					"hx-on:htmx:afterSwap": "document.getElementById('inquiry-form-email-input').focus();",
+				},
+			},
+			FormDescProps: form.DescriptionProps{
+				Class: "text-xs mt-2 text-destructive",
+			},
 		})
 	} else {
-		component = form.Description(form.DescriptionProps{
-			ID:    "inquiry-email-desc",
-			Class: "text-xs mt-2 text-green-500",
-			Value: "All good!",
+		component = modules.FormInput(modules.FormInputProps{
+			FormID:      "inquiry-form",
+			Name:        "email",
+			Label:       "Email",
+			Description: "Email valid!",
+			InputProps: input.Props{
+				Class:       "border-success",
+				Value:       email,
+				Placeholder: "johnsmith@email.com",
+				Attributes: templ.Attributes{
+					"hx-post":              "/inquiry/validate/email",
+					"hx-target":            "#inquiry-form-email-element-container",
+					"hx-trigger":           "keyup delay:500ms changed",
+					"hx-on:htmx:afterSwap": "document.getElementById('inquiry-form-email-input').focus();",
+				},
+			},
+			FormDescProps: form.DescriptionProps{
+				Class: "text-xs mt-2 text-success",
+			},
 		})
 	}
 	component.Render(r.Context(), w)
