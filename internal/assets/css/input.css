@@ -93,4 +93,15 @@
             "rlig" 1,
             "calt" 1;
     }
+
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    border: 1px solid var(--color-border);
+    -webkit-text-fill-color: var(--color-foreground);
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-background) inset;
+    box-shadow: 0 0 0px 1000px var(--color-background) inset;
+    transition: var(--color-background) 5000s ease-in-out 0s;
 }
