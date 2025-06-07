@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/a-h/templ"
+	"github.com/vague2k/blackheaven/internal/components/input"
 	"github.com/vague2k/blackheaven/internal/components/toast"
+	"github.com/vague2k/blackheaven/internal/modules"
 )
 
 type Inquiry struct {
-	Kind     string `json:"kind"`
+	Topic    string `json:"topic"`
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	OrderNum string `json:"order"`
@@ -17,53 +20,71 @@ type Inquiry struct {
 }
 
 func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
-	request := &Inquiry{}
+	i := &Inquiry{}
 
 	err := r.ParseForm()
 	if err != nil {
-		respErr(w, http.StatusBadRequest, err.Error())
+		showInquiryErrorToast(ErrInternal, fmt.Sprintf("Status code: %d", http.StatusInternalServerError), w, r)
 		return
 	}
 
 	for k, v := range r.Form {
 		switch k {
-		case "kind":
-			request.Kind = v[0]
+		case "topic":
+			i.Topic = v[0]
 		case "email":
-			request.Email = v[0]
+			i.Email = v[0]
 		case "name":
-			request.Name = v[0]
+			i.Name = v[0]
 		case "order":
-			request.OrderNum = v[0]
+			i.OrderNum = v[0]
 		case "subject":
-			request.Subject = v[0]
+			i.Subject = v[0]
 		case "content":
-			request.Content = v[0]
+			i.Content = v[0]
 		default:
 			showInquiryErrorToast("Internal issue", "an internal server error has occured", w, r)
 			return
 		}
 	}
 
-	if err := isValidInquiry(request.Kind); err != nil {
+	if err := isValidTopic(i.Topic); err != nil {
 		showInquiryErrorToast("Inquiry Topic", err.Error(), w, r)
 		return
-	} else if err := isValidEmail(request.Email); err != nil {
+	}
+	if err := isValidEmail(i.Email); err != nil {
 		showInquiryErrorToast("Email", err.Error(), w, r)
+		modules.FormInput(modules.FormInputProps{
+			FormID:      "inquiry-form",
+			Name:        "email",
+			Class:       "w-1/2",
+			Label:       "Email",
+			HasError:    true,
+			Required:    true,
+			Description: "Not a valid email, try again",
+			InputProps: input.Props{
+				Value:       i.Email,
+				Placeholder: "johnsmith@email.com",
+			},
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-email-element-container",
+			},
+		}).Render(r.Context(), w)
 		return
-	} else if request.Content == "" {
-		showInquiryErrorToast("Content", ErrInquiryContentEmpty, w, r)
+	}
+	if i.Content == "" {
+		showInquiryErrorToast("Content", ErrContentRequired, w, r)
 		return
 	}
 
-	if request.Name == "" {
-		request.Name = "No name given"
+	if i.Name == "" {
+		i.Name = "No name given"
 	}
-	if request.OrderNum == "" {
-		request.OrderNum = "No order number given"
+	if i.OrderNum == "" {
+		i.OrderNum = "No order number given"
 	}
-	if request.Subject == "" {
-		request.Subject = "New Message"
+	if i.Subject == "" {
+		i.Subject = "New Message"
 	}
 
 	// TODO: setup way to only get here through redirect and not outside source
@@ -79,19 +100,15 @@ func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
 	}).Render(r.Context(), w)
 }
 
-func isValidInquiry(v string) error {
+func isValidTopic(v string) error {
 	switch v {
-	case "order":
-		return nil
-	case "release":
-		return nil
-	case "submission":
+	case "order", "release", "submission", "general":
 		return nil
 	case "":
-		return fmt.Errorf("%s", ErrInquiryKindEmpty)
+		return fmt.Errorf("%s", ErrTopicRequired)
+	default:
+		return fmt.Errorf("not a valid inquiry '%s'", v)
 	}
-
-	return fmt.Errorf("not a valid inquiry '%s'", v)
 }
 
 func showInquiryErrorToast(title, description string, w http.ResponseWriter, r *http.Request) {

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -32,4 +33,8 @@ func UserDataDir() string {
 	}
 
 	return dataDir
+}
+
+func ID(formID, name, component, element string) string {
+	return fmt.Sprintf("%s-%s-%s-%s", formID, name, component, element)
 }

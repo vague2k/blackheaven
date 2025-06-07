@@ -2,12 +2,11 @@ package pages
 
 import (
 	"github.com/vague2k/blackheaven/internal/components/button"
-	"github.com/vague2k/blackheaven/internal/components/form"
 	"github.com/vague2k/blackheaven/internal/components/input"
-	"github.com/vague2k/blackheaven/internal/components/selectbox"
 	"github.com/vague2k/blackheaven/internal/components/textarea"
 	"github.com/vague2k/blackheaven/internal/layouts"
 	"github.com/vague2k/blackheaven/internal/modules"
+	"github.com/vague2k/blackheaven/internal/components/icon"
 )
 
 const FormID = "inquiry-form"
@@ -16,123 +15,95 @@ templ Inquiry() {
 	@layouts.BaseLayout() {
 		<div class="flex justify-center items-center h-screen">
 			<div class="justify-center items-center min-w-lg">
-				@modules.ThemeSwitcher()
 				<form class="space-y-5">
 					<div class="flex gap-x-3">
-						@form.Item(form.ItemProps{
-							Class: "w-1/2",
-						}) {
-							@form.Label(form.LabelProps{
-								For: FormID,
-							}) {
-								Inquiry Type
-							}
-							@selectbox.SelectBox() {
-								@selectbox.Trigger(selectbox.TriggerProps{
-									Name:     "kind",
-									ID:       FormID,
-									Required: true,
-								}) {
-									@selectbox.Value(selectbox.ValueProps{
-										Placeholder: "Inquiry",
-									})
-								}
-								@selectbox.Content() {
-									@selectbox.Group() {
-										@selectbox.Item(selectbox.ItemProps{
-											Value: "order",
-										}) {
-											Order
-										}
-										@selectbox.Item(selectbox.ItemProps{
-											Value: "release",
-										}) {
-											Release
-										}
-										@selectbox.Item(selectbox.ItemProps{
-											Value: "generic",
-										}) {
-											Generic
-										}
-									}
-								}
-							}
-							@form.Description(form.DescriptionProps{
-								ID:    "inquiry-form-select-box-desc",
-								Class: "text-xs",
-							}) {
-								What kind of inquiry is it?
-							}
-						}
-						@form.Item(form.ItemProps{
-							Class: "w-1/2",
-						}) {
-							@modules.FormInput(modules.FormInputProps{
-								FormID:      FormID,
-								Name:        "email",
-								Label:       "Email",
-								Description: "Enter a valid email",
-								InputProps: input.Props{
-									Placeholder: "johnsmith@email.com",
-									Attributes: templ.Attributes{
-										"hx-post":              "/inquiry/validate/email",
-										"hx-target":            "#inquiry-form-email-element-container",
-										"hx-trigger":           "keyup delay:500ms changed",
-										"hx-swap":              "outerHTML",
-										"hx-on:htmx:afterSwap": "document.getElementById('inquiry-form-email-input').focus();",
-									},
-								},
-							})
-						}
+						@modules.FormSelectBox(modules.FormSelectBoxProps{
+							Name:        "topic",
+							Class:       "w-1/2",
+							Label:       "Inquiry Topic",
+							Required:    true,
+							Description: "What kind of topic is it?",
+							Placeholder: "Select a topic",
+							Options: modules.SelectBoxOptions{
+								"Submission": "submission",
+								"Release":    "release",
+								"Order":      "order",
+								"General":    "general",
+							},
+						})
+						@modules.FormInput(modules.FormInputProps{
+							FormID:      FormID,
+							Name:        "email",
+							Class:       "w-1/2",
+							Label:       "Email",
+							Description: "Enter a valid email",
+							Required:    true,
+							InputProps: input.Props{
+								Placeholder: "johnsmith@email.com",
+							},
+						})
 					</div>
 					<div class="flex gap-x-3">
-						@form.Item(form.ItemProps{
-							Class: "w-1/2",
-						}) {
-							@modules.FormInput(modules.FormInputProps{
-								FormID: FormID,
-								Label:  "Name",
-								InputProps: input.Props{
-									Type:        input.TypeText,
-									Placeholder: "John Smith",
-								},
-							})
-						}
-						@form.Item(form.ItemProps{
-							Class: "w-1/2",
-						}) {
-							@modules.FormInput(modules.FormInputProps{
-								FormID: FormID,
-								Name:   "order",
-								Label:  "Order #",
-								InputProps: input.Props{
-									Type:        input.TypeText,
-									Placeholder: "Order # here",
-								},
-							})
-						}
+						@modules.FormInput(modules.FormInputProps{
+							Class:  "w-1/2",
+							FormID: FormID,
+							Label:  "Name",
+							InputProps: input.Props{
+								Type:        input.TypeText,
+								Placeholder: "John Smith",
+							},
+						})
+						@modules.FormInput(modules.FormInputProps{
+							Class:  "w-1/2",
+							FormID: FormID,
+							Name:   "order",
+							Label:  "Order #",
+							InputProps: input.Props{
+								Type:        input.TypeText,
+								Placeholder: "Order # here",
+							},
+						})
 					</div>
-					@form.Item() {
-						@form.Label(form.LabelProps{
-							For: FormID,
-						}) {
-							Message
-						}
-						@textarea.Textarea(textarea.Props{
-							ID:          "inquiry-form-content",
-							Name:        "content",
+					@modules.FormInput(modules.FormInputProps{
+						FormID: FormID,
+						Name:   "subject",
+						Label:  "Subject",
+						InputProps: input.Props{
+							Type:        input.TypeText,
+							Placeholder: "Summarize your message",
+						},
+					})
+					@modules.FormTextarea(modules.FormTextareaProps{
+						Name:     "content",
+						Label:    "Message",
+						Required: true,
+						TextareaProps: textarea.Props{
 							Placeholder: "What do you have to say...",
 							AutoResize:  true,
-						})
-					}
-					@button.Button(button.Props{
-						Attributes: map[string]any{
-							"hx-post":   "/inquiry",
-							"hx-target": "#inquiry-form-toast",
 						},
-					}) {
-						Submit
-					}
+					})
+					<div class="flex mb-4 items-center gap-x-3">
+						<span class="text-sm font-regular text-muted-foreground">
+							Required fields are marked by
+						</span>
+						<span class="flex ml-[-0.2rem] mb-2 text-destructive text-xl">
+							@icon.Circle(icon.Props{
+								Size: 6,
+								Fill: "red",
+							})
+						</span>
+					</div>
+					<div class="flex justify-between">
+						@button.Button(button.Props{
+							Attributes: map[string]any{
+								"hx-post":   "/inquiry",
+								"hx-target": "#inquiry-form-toast",
+							},
+						}) {
+							Submit
+						}
+						@modules.ThemeSwitcher()
+					</div>
 				</form>
 			</div>
 			<div id="inquiry-form-toast"></div>
