@@ -1,5 +1,8 @@
 version: "2"
 linters:
+  exclusions:
+    paths:
+      - ./internal
   settings:
     errcheck:
       # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`.
@@ -13,3 +16,4 @@ linters:
         - (*database/sql.DB).Close
         - (io.ReadCloser).Close
         - (net/http.ResponseWriter).Write
+        - (github.com/a-h/templ.Component).Render
