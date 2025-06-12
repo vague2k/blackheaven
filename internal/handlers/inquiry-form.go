@@ -22,36 +22,16 @@ type inquiry struct {
 func InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
 	i := &inquiry{}
 
-	err := r.ParseForm()
-	if err != nil {
+	if err := ScanForm(r, i); err != nil {
 		showInquiryErrorToast(ErrInternal, fmt.Sprintf("Status code: %d", http.StatusInternalServerError), w, r)
 		return
-	}
-
-	for k, v := range r.Form {
-		switch k {
-		case "topic":
-			i.Topic = v[0]
-		case "email":
-			i.Email = v[0]
-		case "name":
-			i.Name = v[0]
-		case "order":
-			i.OrderNum = v[0]
-		case "subject":
-			i.Subject = v[0]
-		case "content":
-			i.Content = v[0]
-		default:
-			showInquiryErrorToast("Internal issue", "an internal server error has occured", w, r)
-			return
-		}
 	}
 
 	if err := isValidTopic(i.Topic); err != nil {
 		showInquiryErrorToast("Inquiry Topic", err.Error(), w, r)
 		return
 	}
+
 	if err := isValidEmail(i.Email); err != nil {
 		showInquiryErrorToast("Email", err.Error(), w, r)
 		modules.FormInput(modules.FormInputProps{
