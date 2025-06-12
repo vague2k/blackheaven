@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/a-h/templ"
-	"github.com/vague2k/blackheaven/handlers"
 	"github.com/vague2k/blackheaven/internal/assets"
+	"github.com/vague2k/blackheaven/internal/handlers"
 	"github.com/vague2k/blackheaven/internal/pages"
 )
 
@@ -18,8 +18,7 @@ func main() {
 		Handler: mux,
 	}
 
-	handler := handlers.NewHandler()
-	mux.HandleFunc("POST /inquiry", handler.InquiryEndpoint)
+	mux.HandleFunc("POST /inquiry", handlers.InquiryEndpoint)
 
 	// pages
 	SetupAssetsRoutes(mux)

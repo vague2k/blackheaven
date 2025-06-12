@@ -10,17 +10,17 @@ import (
 	"github.com/vague2k/blackheaven/internal/modules"
 )
 
-type Inquiry struct {
-	Topic    string `json:"topic"`
-	Email    string `json:"email"`
-	Name     string `json:"name"`
-	OrderNum string `json:"order"`
-	Subject  string `json:"subject"`
-	Content  string `json:"content"`
+type inquiry struct {
+	Topic,
+	Email,
+	Name,
+	OrderNum,
+	Subject,
+	Content string
 }
 
-func (h *Handler) InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
-	i := &Inquiry{}
+func InquiryEndpoint(w http.ResponseWriter, r *http.Request) {
+	i := &inquiry{}
 
 	err := r.ParseForm()
 	if err != nil {
