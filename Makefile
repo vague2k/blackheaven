@@ -25,4 +25,7 @@ tailwind:
 dev:
 	@make -j3 tailwind templ server
 
+components:
+	@templui add selectbox form input label textarea toast
+
 vet: lint format test 

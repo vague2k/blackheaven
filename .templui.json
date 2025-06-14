@@ -1,5 +1,5 @@
 {
-  "componentsDir": "internal/ui/components",
+  "componentsDir": "internal/components",
   "utilsDir": "utils",
   "moduleName": "github.com/vague2k/blackheaven",
   "jsDir": "internal/assets/js"

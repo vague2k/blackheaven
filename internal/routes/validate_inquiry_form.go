@@ -1,0 +1,170 @@
+package routes
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/a-h/templ"
+	"github.com/vague2k/blackheaven/internal/components/input"
+	"github.com/vague2k/blackheaven/internal/components/textarea"
+	"github.com/vague2k/blackheaven/internal/components/toast"
+	"github.com/vague2k/blackheaven/internal/modules"
+)
+
+const formID = "inquiry-form"
+
+func validateInquiryForm(w http.ResponseWriter, r *http.Request) {
+	inquiry := &inquiry{}
+	var topicSelectbox, emailInput, orderInput, contentTextarea templ.Component
+	var hasError bool
+	var errs []error
+
+	if err := ScanForm(r, inquiry); err != nil {
+		showInquiryErrorToast(ErrInternal, fmt.Sprintf("Status code: %d", http.StatusInternalServerError), w, r)
+		return
+	}
+
+	topicErr := inquiry.IsValidTopic()
+	emailErr := inquiry.IsValidEmail()
+	orderErr := inquiry.IsTopicOrder()
+	contentErr := inquiry.IsContentEmpty()
+
+	if topicErr != nil {
+		hasError = true
+		errs = append(errs, topicErr)
+		topicSelectbox = modules.FormSelectBox(modules.FormSelectBoxProps{
+			FormID:      formID,
+			Name:        "topic",
+			Class:       "w-1/2",
+			Label:       "Inquiry Topic",
+			HasError:    true,
+			Required:    true,
+			Description: topicErr.Error(),
+			Placeholder: "Select a topic",
+			Options: modules.SelectBoxOptions{
+				"Submission": "submission",
+				"Release":    "release",
+				"Order":      "order",
+				"General":    "general",
+			},
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-topic-element-container",
+			},
+		})
+	}
+	if emailErr != nil {
+		hasError = true
+		errs = append(errs, emailErr)
+		emailInput = modules.FormInput(modules.FormInputProps{
+			FormID:      formID,
+			Name:        "email",
+			Class:       "w-1/2",
+			Label:       "Email",
+			HasError:    true,
+			Required:    true,
+			Description: emailErr.Error(),
+			InputProps: input.Props{
+				Value:       inquiry.Email,
+				Placeholder: "johnsmith@email.com",
+			},
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-email-element-container",
+			},
+		})
+	} else {
+		emailInput = modules.FormInput(modules.FormInputProps{
+			FormID:      formID,
+			Name:        "email",
+			Class:       "w-1/2",
+			Label:       "Email",
+			HasNoError:  true,
+			Required:    true,
+			Description: "Looks good to me!",
+			InputProps: input.Props{
+				Value:       inquiry.Email,
+				Placeholder: "johnsmith@email.com",
+			},
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-email-element-container",
+			},
+		})
+	}
+	if orderErr != nil {
+		hasError = true
+		errs = append(errs, orderErr)
+		orderInput = modules.FormInput(modules.FormInputProps{
+			Class:       "w-1/2",
+			FormID:      formID,
+			Name:        "order",
+			Label:       "Order #",
+			HasError:    true,
+			Required:    true,
+			Description: orderErr.Error(),
+			InputProps: input.Props{
+				Type:        input.TypeText,
+				Placeholder: "Order # here",
+			},
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-order-element-container",
+			},
+		})
+	}
+	if contentErr != nil {
+		hasError = true
+		errs = append(errs, contentErr)
+		contentTextarea = modules.FormTextarea(modules.FormTextareaProps{
+			FormID:   formID,
+			Name:     "content",
+			Label:    "Message",
+			Required: true,
+			HasError: true,
+			TextareaProps: textarea.Props{
+				Placeholder: "What do you have to say...",
+				AutoResize:  true,
+			},
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-content-element-container",
+			},
+		})
+	}
+
+	if hasError {
+		showInquiryErrorToast("Form error", errs[0].Error(), w, r)
+		renderNotNil(topicSelectbox, r, w)
+		renderNotNil(emailInput, r, w)
+		renderNotNil(orderInput, r, w)
+		renderNotNil(contentTextarea, r, w)
+		return
+	}
+
+	if inquiry.Subject == "" {
+		inquiry.Subject = "New Message"
+	}
+
+	toast.Toast(toast.Props{
+		Icon:        true,
+		Title:       "Success",
+		Description: "Your form has been submitted",
+		Variant:     "success",
+		Position:    "top-center",
+		Dismissible: true,
+	}).Render(r.Context(), w)
+}
+
+func showInquiryErrorToast(title, description string, w http.ResponseWriter, r *http.Request) {
+	toast.Toast(toast.Props{
+		Icon:        true,
+		Title:       title,
+		Description: description,
+		Variant:     "error",
+		Position:    "top-center",
+		Dismissible: true,
+	}).Render(r.Context(), w)
+}
+
+func renderNotNil(c templ.Component, r *http.Request, w http.ResponseWriter) {
+	if c == nil {
+		return
+	}
+	c.Render(r.Context(), w)
+}

@@ -1,24 +1,13 @@
-package handlers
+package routes
 
 import (
 	"bufio"
 	"bytes"
 	"embed"
 	"errors"
-	"fmt"
-	"net"
 	"net/http"
-	"net/mail"
 	"reflect"
 	"strings"
-)
-
-var (
-	ErrInternal        = "Internal server error"
-	ErrTopicRequired   = "Inquiry topic is required"
-	ErrEmailRequired   = "Inquiry email is required"
-	ErrEmailInvalid    = "Inquiry email is invalid"
-	ErrContentRequired = "Inquiry content is required"
 )
 
 func ScanForm(r *http.Request, dst any) error {
@@ -40,34 +29,6 @@ func ScanForm(r *http.Request, dst any) error {
 				field.SetString(formValues[0])
 			}
 		}
-	}
-
-	return nil
-}
-
-func isValidEmail(v string) error {
-	if v == "" {
-		return errors.New(ErrEmailInvalid)
-	}
-
-	email, err := mail.ParseAddress(v)
-	if err != nil {
-		return fmt.Errorf("%s", ErrEmailInvalid)
-	}
-	_, domain, _ := strings.Cut(email.Address, "@")
-
-	_, err = net.LookupMX(domain)
-	if err != nil {
-		return errors.New(ErrEmailInvalid)
-	}
-
-	if err := checkDisposable(domain); err != nil {
-		return errors.New(ErrEmailInvalid)
-	}
-
-	_, err = net.LookupTXT(domain)
-	if err != nil {
-		return errors.New(ErrEmailInvalid)
 	}
 
 	return nil

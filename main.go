@@ -7,8 +7,8 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/vague2k/blackheaven/internal/assets"
-	"github.com/vague2k/blackheaven/internal/handlers"
 	"github.com/vague2k/blackheaven/internal/pages"
+	"github.com/vague2k/blackheaven/internal/routes"
 )
 
 func main() {
@@ -18,7 +18,8 @@ func main() {
 		Handler: mux,
 	}
 
-	mux.HandleFunc("POST /inquiry", handlers.InquiryEndpoint)
+	// routes for htmx responses
+	routes.SetupSwapRoutes(mux)
 
 	// pages
 	SetupAssetsRoutes(mux)

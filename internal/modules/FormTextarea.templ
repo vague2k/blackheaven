@@ -53,6 +53,7 @@ templ FormTextarea(props ...FormTextareaProps) {
 			ID:   utils.ID(p.FormID, p.Name, "textarea", "self"),
 			Name: p.Name,
 			Class: utils.TwMerge(
+				"focus:outline focus:outline-ring focus:outline-offset-1",
 				utils.If(p.HasError, "border-destructive focus:outline-destructive"),
 				p.TextareaProps.Class,
 			),

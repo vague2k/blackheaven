@@ -20,6 +20,7 @@ templ Inquiry() {
 						@modules.FormSelectBox(modules.FormSelectBoxProps{
 							Name:        "topic",
 							Class:       "w-1/2",
+							FormID:      FormID,
 							Label:       "Inquiry Topic",
 							Required:    true,
 							Description: "What kind of topic is it?",
@@ -55,10 +56,11 @@ templ Inquiry() {
 							},
 						})
 						@modules.FormInput(modules.FormInputProps{
-							Class:  "w-1/2",
-							FormID: FormID,
-							Name:   "order",
-							Label:  "Order #",
+							Class:       "w-1/2",
+							FormID:      FormID,
+							Name:        "order",
+							Label:       "Order #",
+							Description: "Required if your topic is about an order",
 							InputProps: input.Props{
 								Type:        input.TypeText,
 								Placeholder: "Order # here",
@@ -75,6 +77,7 @@ templ Inquiry() {
 						},
 					})
 					@modules.FormTextarea(modules.FormTextareaProps{
+						FormID:   FormID,
 						Name:     "content",
 						Label:    "Message",
 						Required: true,
@@ -96,10 +99,8 @@ templ Inquiry() {
 					</div>
 					<div class="flex justify-between">
 						@button.Button(button.Props{
-							Attributes: map[string]any{
-								"hx-post":   "/inquiry",
-								"hx-target": "#inquiry-form-toast",
-							},
+							HxPost:   "/validate/inquiry-form/all",
+							HxTarget: "#inquiry-form-toast",
 						}) {
 							Submit
 						}

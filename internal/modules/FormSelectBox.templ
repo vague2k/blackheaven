@@ -9,18 +9,19 @@ import "github.com/vague2k/blackheaven/internal/components/icon"
 type SelectBoxOptions map[string]string
 
 type FormSelectBoxProps struct {
-	FormID         string
-	Name           string
-	Description    string
-	Label          string
-	Placeholder    string
-	Class          string
-	HasError       bool
-	Required       bool
-	FormLabelProps form.LabelProps
-	FormDescProps  form.DescriptionProps
-	Attributes     templ.Attributes
-	Options        SelectBoxOptions
+	FormID                string
+	Name                  string
+	Description           string
+	Label                 string
+	Placeholder           string
+	Class                 string
+	HasError              bool
+	Required              bool
+	FormLabelProps        form.LabelProps
+	FormDescProps         form.DescriptionProps
+	SelectBoxTriggerProps selectbox.TriggerProps
+	Attributes            templ.Attributes
+	Options               SelectBoxOptions
 }
 
 templ FormSelectBox(props ...FormSelectBoxProps) {
@@ -59,9 +60,11 @@ templ FormSelectBox(props ...FormSelectBoxProps) {
 				ID:   utils.ID(p.FormID, p.Name, "selectbox", "trigger"),
 				Name: p.Name,
 				Class: utils.TwMerge(
+					"focus:outline focus:outline-ring focus:outline-offset-1",
 					utils.If(p.HasError, "border-destructive focus:outline-destructive"),
 				),
-				Required: p.Required,
+				Required:   p.Required,
+				Attributes: p.SelectBoxTriggerProps.Attributes,
 			}) {
 				@selectbox.Value(selectbox.ValueProps{
 					Placeholder: p.Placeholder,
