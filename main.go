@@ -9,6 +9,7 @@ import (
 	"github.com/vague2k/blackheaven/internal/assets"
 	"github.com/vague2k/blackheaven/internal/pages"
 	"github.com/vague2k/blackheaven/internal/routes"
+	"github.com/vague2k/blackheaven/services/handlers"
 )
 
 func main() {
@@ -20,6 +21,9 @@ func main() {
 
 	// routes for htmx responses
 	routes.SetupSwapRoutes(mux)
+
+	h := handlers.NewHandler()
+	mux.HandleFunc("GET /db/inquiry/select-inquiries/{limit}", h.SelectInquiries)
 
 	// pages
 	SetupAssetsRoutes(mux)

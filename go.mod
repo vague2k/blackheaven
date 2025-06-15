@@ -7,4 +7,7 @@ require (
 	github.com/a-h/templ v0.3.887
 )
 
-require github.com/stretchr/testify v1.10.0 // indirect
+require (
+	github.com/mattn/go-sqlite3 v1.14.28 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
+)

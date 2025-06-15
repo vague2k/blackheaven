@@ -7,3 +7,5 @@ bin
 node_modules
 tmp
 .env
+
+services/database/dummy_data/dummies.db
