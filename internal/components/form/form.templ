@@ -1,4 +1,4 @@
-// templui component form - version: main installed by templui v0.74.1
+// templui component form - version: v0.75.4 installed by templui v0.75.4
 package form
 
 import (
@@ -30,7 +30,6 @@ type LabelProps struct {
 type DescriptionProps struct {
 	ID         string
 	Class      string
-	Value      string
 	Attributes templ.Attributes
 }
 
@@ -100,9 +99,6 @@ templ Description(props ...DescriptionProps) {
 		class={ utils.TwMerge("text-sm text-muted-foreground", p.Class) }
 		{ p.Attributes... }
 	>
-		if p.Value != "" {
-			{ p.Value }
-		}
 		{ children... }
 	</p>
 }
@@ -117,8 +113,11 @@ templ Message(props ...MessageProps) {
 			id={ p.ID }
 		}
 		class={
-			utils.TwMerge("text-[0.8rem] font-medium", messageVariantClass(p.Variant),
-				p.Class),
+			utils.TwMerge(
+				"text-[0.8rem] font-medium",
+				messageVariantClass(p.Variant),
+				p.Class,
+			),
 		}
 		{ p.Attributes... }
 	>

@@ -2,5 +2,6 @@
   "componentsDir": "internal/components",
   "utilsDir": "utils",
   "moduleName": "github.com/vague2k/blackheaven",
-  "jsDir": "internal/assets/js"
+  "jsDir": "internal/assets/js",
+  "jsPublicPath": "assets/js"
 }

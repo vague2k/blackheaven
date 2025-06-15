@@ -1,4 +1,4 @@
-// templui component input - version: main installed by templui v0.74.1
+// templui component input - version: v0.75.4 installed by templui v0.75.4
 package input
 
 import (
@@ -74,9 +74,9 @@ templ Input(props ...Props) {
 					"rounded-md border border-input bg-background text-sm ring-offset-background",
 					"file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
 					"placeholder:text-muted-foreground",
-					"focus:outline focus:outline-ring focus:outline-offset-1",
+					"focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
 					"disabled:cursor-not-allowed disabled:opacity-50",
-					utils.If(p.HasError, "border-destructive focus:outline-destructive"),
+					utils.If(p.HasError, "border-destructive ring-destructive"),
 					utils.If(p.Type == TypePassword && !p.NoTogglePassword, "pr-8"),
 					p.Class,
 				),
@@ -106,5 +106,5 @@ templ Input(props ...Props) {
 }
 
 templ Script() {
-	<script defer src="/assets/js/input.min.js"></script>
+	<script defer src="assets/js/input.min.js"></script>
 }
