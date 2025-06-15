@@ -28,6 +28,7 @@ func main() {
 	// pages
 	SetupAssetsRoutes(mux)
 	mux.Handle("GET /inquiry", templ.Handler(pages.Inquiry()))
+	mux.Handle("GET /manager", templ.Handler(pages.ManagerView()))
 
 	err := server.ListenAndServe()
 	if err != nil {

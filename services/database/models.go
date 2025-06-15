@@ -5,16 +5,16 @@
 package database
 
 import (
-	"database/sql"
+	"time"
 )
 
 type Inquiry struct {
 	ID          int64
 	Topic       string
 	Email       string
-	Name        sql.NullString
-	OrderNumber sql.NullString
-	Subject     sql.NullString
+	Name        string
+	OrderNumber string
+	Subject     string
 	Content     string
-	CreatedAt   sql.NullTime
+	CreatedAt   time.Time
 }

@@ -1,0 +1,114 @@
+package pages
+
+import (
+	"github.com/vague2k/blackheaven/internal/components/table"
+	"github.com/vague2k/blackheaven/internal/layouts"
+	"github.com/vague2k/blackheaven/internal/components/badge"
+	"github.com/vague2k/blackheaven/internal/modules"
+)
+
+templ ManagerView() {
+	@layouts.BaseLayout() {
+		@modules.ThemeSwitcher()
+		<div>
+			@table.Table(table.Props{}) {
+				@table.Header() {
+					@table.Row() {
+						@table.Head() {
+							Topic
+						}
+						@table.Head() {
+							Email
+						}
+						@table.Head() {
+							Name
+						}
+						@table.Head() {
+							Order #
+						}
+						@table.Head() {
+							Subject
+						}
+						@table.Head() {
+							Content
+						}
+					}
+				}
+				@table.Body() {
+					@table.Row() {
+						@table.Cell() {
+							@badge.Badge(badge.Props{
+								Class: "rounded-sm bg-purple-500 text-white",
+							}) {
+								Order
+							}
+						}
+						@table.Cell() {
+							email@email.com
+						}
+						@table.Cell() {
+							john doe
+						}
+						@table.Cell() {
+							order-AH123
+						}
+						@table.Cell() {
+							Subject
+						}
+						@table.Cell() {
+							Content
+						}
+					}
+					@table.Row() {
+						@table.Cell() {
+							@badge.Badge(badge.Props{
+								Class: "rounded-sm bg-muted text-foreground",
+							}) {
+								General
+							}
+						}
+						@table.Cell() {
+							email@email.com
+						}
+						@table.Cell() {
+							john doe
+						}
+						@table.Cell() {
+							order-AH123
+						}
+						@table.Cell() {
+							Subject
+						}
+						@table.Cell() {
+							Content
+						}
+					}
+					@table.Row() {
+						@table.Cell() {
+							@badge.Badge(badge.Props{
+								Class: "rounded-sm bg-blue-500 text-white",
+							}) {
+								Submission
+							}
+						}
+						@table.Cell() {
+							email@email.com
+						}
+						@table.Cell() {
+							john doe
+						}
+						@table.Cell() {
+							order-AH123
+						}
+						@table.Cell() {
+							Subject
+						}
+						@table.Cell() {
+							Content
+						}
+					}
+				}
+			}
+		</div>
+	}
+}
