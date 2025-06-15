@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	_ "embed"
 	"fmt"
+	"os"
+	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -12,9 +14,17 @@ import (
 var schema string
 
 func Init() (*Queries, error) {
-	db, err := sql.Open("sqlite3", "dummy_data/dummies.db")
+	// FIXME: delete this later when development is finalized
+	dir, err := os.Getwd()
 	if err != nil {
-		return nil, fmt.Errorf("could not init rummage db: \n%s", err)
+		return nil, fmt.Errorf("couldnt get working dir", err)
+	}
+	file := filepath.Join(dir, "/services/database/dummy_data/dummies.db")
+
+	// NOTE: remember to use absolute path for db file
+	db, err := sql.Open("sqlite3", file)
+	if err != nil {
+		return nil, fmt.Errorf("could not init blackheaven db: \n%s", err)
 	}
 
 	// if _, err := db.ExecContext(context.Background(), schema); err != nil {

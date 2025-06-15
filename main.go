@@ -23,7 +23,7 @@ func main() {
 	routes.SetupSwapRoutes(mux)
 
 	h := handlers.NewHandler()
-	mux.HandleFunc("GET /db/inquiry/select-inquiries/{limit}", h.SelectInquiries)
+	mux.HandleFunc("GET /db/inquiry/select-inquiries", h.SelectInquiries)
 
 	// pages
 	SetupAssetsRoutes(mux)
