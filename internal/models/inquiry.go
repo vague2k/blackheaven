@@ -1,6 +1,9 @@
-package routes
+package models
 
 import (
+	"bufio"
+	"bytes"
+	"embed"
 	"fmt"
 	"net"
 	"net/mail"
@@ -16,7 +19,7 @@ var (
 	ErrOrderRequired   = "An order number is required if the topic is about an order"
 )
 
-type inquiry struct {
+type Inquiry struct {
 	Topic,
 	Email,
 	Name,
@@ -25,7 +28,7 @@ type inquiry struct {
 	Content string
 }
 
-func (i *inquiry) IsValidTopic() error {
+func (i *Inquiry) IsValidTopic() error {
 	switch i.Topic {
 	case "order", "release", "submission", "general":
 		return nil
@@ -36,21 +39,21 @@ func (i *inquiry) IsValidTopic() error {
 	}
 }
 
-func (i *inquiry) IsContentEmpty() error {
+func (i *Inquiry) IsContentEmpty() error {
 	if i.Content == "" {
 		return fmt.Errorf("%v", ErrContentRequired)
 	}
 	return nil
 }
 
-func (i *inquiry) IsTopicOrder() error {
+func (i *Inquiry) IsTopicOrder() error {
 	if i.Order == "" && i.Topic == "order" {
 		return fmt.Errorf("%v", ErrOrderRequired)
 	}
 	return nil
 }
 
-func (i *inquiry) IsValidEmail() error {
+func (i *Inquiry) IsValidEmail() error {
 	if i.Email == "" {
 		return fmt.Errorf("%v", ErrEmailRequired)
 	}
@@ -77,5 +80,31 @@ func (i *inquiry) IsValidEmail() error {
 		return invalid
 	}
 
+	return nil
+}
+
+//go:embed disposable_emails.txt
+var f embed.FS
+
+// TODO: the embedded list of disposable emails is over 1.5 mb big. perhaps
+// reading the file and creating the hashmap could be done concurrently since
+// order doesn't matter anyways?
+
+func checkDisposable(v string) error {
+	hashMap := make(map[string]bool)
+	b, err := f.ReadFile("disposable.txt")
+	if err != nil {
+		return err
+	}
+	scanner := bufio.NewScanner(bytes.NewReader(b))
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		hashMap[line] = true
+	}
+
+	if hashMap[v] {
+		return fmt.Errorf("%v", ErrEmailInvalid)
+	}
 	return nil
 }

@@ -1,7 +1,7 @@
 {
-  "componentsDir": "internal/components",
+  "componentsDir": "views/components",
   "utilsDir": "utils",
   "moduleName": "github.com/vague2k/blackheaven",
-  "jsDir": "internal/assets/js",
+  "jsDir": "views/assets/js",
   "jsPublicPath": "assets/js"
 }

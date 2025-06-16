@@ -6,10 +6,9 @@ import (
 	"os"
 
 	"github.com/a-h/templ"
-	"github.com/vague2k/blackheaven/internal/assets"
-	"github.com/vague2k/blackheaven/internal/pages"
-	"github.com/vague2k/blackheaven/internal/routes"
-	"github.com/vague2k/blackheaven/services/handlers"
+	"github.com/vague2k/blackheaven/internal/router"
+	"github.com/vague2k/blackheaven/views/assets"
+	"github.com/vague2k/blackheaven/views/pages"
 )
 
 func main() {
@@ -19,11 +18,10 @@ func main() {
 		Handler: mux,
 	}
 
-	// routes for htmx responses
-	routes.SetupSwapRoutes(mux)
+	router.SetupRoutes(mux)
 
-	h := handlers.NewHandler()
-	mux.HandleFunc("GET /db/inquiry/select-inquiries", h.SelectInquiries)
+	// mux.HandleFunc("GET /db/inquiry/select-inquiries", h.SelectInquiries)
+	// mux.HandleFunc("GET /db/inquiry/select-inquiries", h.SelectInquiries)
 
 	// pages
 	SetupAssetsRoutes(mux)
@@ -46,7 +44,7 @@ func SetupAssetsRoutes(mux *http.ServeMux) {
 
 		var fs http.Handler
 		if isDevelopment {
-			fs = http.FileServer(http.Dir("./internal/assets"))
+			fs = http.FileServer(http.Dir("./views/assets"))
 		} else {
 			fs = http.FileServer(http.FS(assets.Assets))
 		}

@@ -1,25 +1,27 @@
-package routes
+package handlers
 
 import (
 	"fmt"
 	"net/http"
 
 	"github.com/a-h/templ"
-	"github.com/vague2k/blackheaven/internal/components/input"
-	"github.com/vague2k/blackheaven/internal/components/textarea"
-	"github.com/vague2k/blackheaven/internal/components/toast"
-	"github.com/vague2k/blackheaven/internal/modules"
+	"github.com/vague2k/blackheaven/internal/models"
+	"github.com/vague2k/blackheaven/internal/services"
+	"github.com/vague2k/blackheaven/views/components/input"
+	"github.com/vague2k/blackheaven/views/components/textarea"
+	"github.com/vague2k/blackheaven/views/components/toast"
+	"github.com/vague2k/blackheaven/views/modules"
 )
 
 const formID = "inquiry-form"
 
-func validateInquiryForm(w http.ResponseWriter, r *http.Request) {
-	inquiry := &inquiry{}
+func CreateInquiry(w http.ResponseWriter, r *http.Request) {
+	inquiry := &models.Inquiry{}
 	var topicSelectbox, emailInput, orderInput, contentTextarea templ.Component
-	var hasError bool
+	var formHasError bool
 	var errs []error
 
-	if err := ScanForm(r, inquiry); err != nil {
+	if err := scanForm(r, inquiry); err != nil {
 		showInquiryErrorToast(ErrInternal, fmt.Sprintf("Status code: %d", http.StatusInternalServerError), w, r)
 		return
 	}
@@ -30,7 +32,7 @@ func validateInquiryForm(w http.ResponseWriter, r *http.Request) {
 	contentErr := inquiry.IsContentEmpty()
 
 	if topicErr != nil {
-		hasError = true
+		formHasError = true
 		errs = append(errs, topicErr)
 		topicSelectbox = modules.FormSelectBox(modules.FormSelectBoxProps{
 			FormID:      formID,
@@ -53,7 +55,7 @@ func validateInquiryForm(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 	if emailErr != nil {
-		hasError = true
+		formHasError = true
 		errs = append(errs, emailErr)
 		emailInput = modules.FormInput(modules.FormInputProps{
 			FormID:      formID,
@@ -90,7 +92,7 @@ func validateInquiryForm(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 	if orderErr != nil {
-		hasError = true
+		formHasError = true
 		errs = append(errs, orderErr)
 		orderInput = modules.FormInput(modules.FormInputProps{
 			Class:       "w-1/2",
@@ -110,7 +112,7 @@ func validateInquiryForm(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 	if contentErr != nil {
-		hasError = true
+		formHasError = true
 		errs = append(errs, contentErr)
 		contentTextarea = modules.FormTextarea(modules.FormTextareaProps{
 			FormID:   formID,
@@ -128,12 +130,14 @@ func validateInquiryForm(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	if hasError {
+	if formHasError {
 		showInquiryErrorToast("Form error", errs[0].Error(), w, r)
-		renderNotNil(topicSelectbox, r, w)
-		renderNotNil(emailInput, r, w)
-		renderNotNil(orderInput, r, w)
-		renderNotNil(contentTextarea, r, w)
+		render(w, r,
+			topicSelectbox,
+			emailInput,
+			orderInput,
+			contentTextarea,
+		)
 		return
 	}
 
@@ -149,6 +153,8 @@ func validateInquiryForm(w http.ResponseWriter, r *http.Request) {
 		Position:    "top-center",
 		Dismissible: true,
 	}).Render(r.Context(), w)
+
+	services.CreateInquiry(inquiry)
 }
 
 func showInquiryErrorToast(title, description string, w http.ResponseWriter, r *http.Request) {

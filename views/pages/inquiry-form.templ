@@ -1,12 +1,12 @@
 package pages
 
 import (
-	"github.com/vague2k/blackheaven/internal/components/button"
-	"github.com/vague2k/blackheaven/internal/components/input"
-	"github.com/vague2k/blackheaven/internal/components/textarea"
-	"github.com/vague2k/blackheaven/internal/layouts"
-	"github.com/vague2k/blackheaven/internal/modules"
-	"github.com/vague2k/blackheaven/internal/components/icon"
+	"github.com/vague2k/blackheaven/views/components/button"
+	"github.com/vague2k/blackheaven/views/components/input"
+	"github.com/vague2k/blackheaven/views/components/textarea"
+	"github.com/vague2k/blackheaven/views/layouts"
+	"github.com/vague2k/blackheaven/views/modules"
+	"github.com/vague2k/blackheaven/views/components/icon"
 )
 
 const FormID = "inquiry-form"
@@ -99,7 +99,7 @@ templ Inquiry() {
 					</div>
 					<div class="flex justify-between">
 						@button.Button(button.Props{
-							HxPost:   "/validate/inquiry-form/all",
+							HxPost:   "/create-inquiry",
 							HxTarget: "#inquiry-form-toast",
 						}) {
 							Submit
