@@ -40,6 +40,9 @@ func render(w http.ResponseWriter, r *http.Request, components ...templ.Componen
 		return
 	}
 	for _, c := range components {
+		if c == nil {
+			continue
+		}
 		c.Render(r.Context(), w)
 	}
 }
