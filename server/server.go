@@ -1,36 +1,37 @@
 package server
 
 import (
-	"embed"
-	"log"
 	"net/http"
 	"os"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/vague2k/blackheaven/views/assets"
 )
 
 type Server struct {
 	Port   string
-	Router *Router
+	Router *chi.Mux
 
-	logger *log.Logger
 	server http.Server
 }
 
 func NewServer(port string) *Server {
 	return &Server{
 		Port:   port,
-		Router: NewRouter(),
+		Router: chi.NewRouter(),
 	}
 }
 
+// TODO: implement graceful shutdown
 func (s *Server) Run() error {
 	s.server = http.Server{
 		Addr:    s.Port,
-		Handler: s.Router.mux,
+		Handler: s.Router,
 	}
 	return s.server.ListenAndServe()
 }
 
-func (s *Server) SetupAssets(assets embed.FS) {
+func (s *Server) SetupAssets() {
 	isDevelopment := os.Getenv("GO_ENV") != "production"
 
 	assetHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -42,11 +43,11 @@ func (s *Server) SetupAssets(assets embed.FS) {
 		if isDevelopment {
 			fs = http.FileServer(http.Dir("./views/assets"))
 		} else {
-			fs = http.FileServer(http.FS(assets))
+			fs = http.FileServer(http.FS(assets.Assets))
 		}
 
 		fs.ServeHTTP(w, r)
 	})
 
-	s.Router.mux.Handle("/assets/", http.StripPrefix("/assets/", assetHandler))
+	s.Router.Handle("GET /assets/*", http.StripPrefix("/assets/", assetHandler))
 }

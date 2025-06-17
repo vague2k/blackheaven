@@ -167,10 +167,3 @@ func showInquiryErrorToast(title, description string, w http.ResponseWriter, r *
 		Dismissible: true,
 	}).Render(r.Context(), w)
 }
-
-func renderNotNil(c templ.Component, r *http.Request, w http.ResponseWriter) {
-	if c == nil {
-		return
-	}
-	c.Render(r.Context(), w)
-}

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net"
 	"net/mail"
+	"os"
 	"strings"
 )
 
@@ -62,21 +63,25 @@ func (i *Inquiry) IsValidEmail() error {
 
 	email, err := mail.ParseAddress(i.Email)
 	if err != nil {
+		fmt.Fprint(os.Stdout, err)
 		return invalid
 	}
 	_, domain, _ := strings.Cut(email.Address, "@")
 
 	_, err = net.LookupMX(domain)
 	if err != nil {
+		fmt.Fprint(os.Stdout, err)
 		return invalid
 	}
 
 	if err := checkDisposable(domain); err != nil {
+		fmt.Fprint(os.Stdout, err)
 		return invalid
 	}
 
 	_, err = net.LookupTXT(domain)
 	if err != nil {
+		fmt.Fprint(os.Stdout, err)
 		return invalid
 	}
 
@@ -92,7 +97,7 @@ var f embed.FS
 
 func checkDisposable(v string) error {
 	hashMap := make(map[string]bool)
-	b, err := f.ReadFile("disposable.txt")
+	b, err := f.ReadFile("disposable_emails.txt")
 	if err != nil {
 		return err
 	}

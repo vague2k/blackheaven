@@ -1,18 +1,3 @@
-lint:
-	@echo "Running linter...";
-	@golangci-lint run --color=always;
-
-# uncomment this when gofumpt implements ignore mechanism for go tooling,
-# see https://github.com/golang/go/issues/42965 for more details
-format:
-# @echo "Running formatter...";
-# @gofumpt -l -w -d .;
-
-test:
-	@echo "Running tests...";
-	@set -euo pipefail
-	@go test -json $(go list ./... | grep -v '/internal') | tee /tmp/gotest.log | gotestfmt -hide=empty-packages
-
 templ:
 	@templ generate --watch --proxy="localhost:3000" --open-browser=false
 
