@@ -1,56 +1,26 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"os"
-
-	"github.com/a-h/templ"
-	"github.com/vague2k/blackheaven/internal/router"
+	"github.com/vague2k/blackheaven/internal/handlers"
+	"github.com/vague2k/blackheaven/server"
 	"github.com/vague2k/blackheaven/views/assets"
 	"github.com/vague2k/blackheaven/views/pages"
 )
 
 func main() {
-	mux := http.NewServeMux()
-	server := http.Server{
-		Addr:    ":3000",
-		Handler: mux,
-	}
+	s := server.NewServer(":3000")
 
-	router.SetupRoutes(mux)
+	s.SetupAssets(assets.Assets)
 
-	// mux.HandleFunc("GET /db/inquiry/select-inquiries", h.SelectInquiries)
-	// mux.HandleFunc("GET /db/inquiry/select-inquiries", h.SelectInquiries)
+	// service endpoints
+	s.Router.Post("/create-inquiry", handlers.CreateInquiry)
 
 	// pages
-	SetupAssetsRoutes(mux)
-	mux.Handle("GET /inquiry", templ.Handler(pages.Inquiry()))
-	mux.Handle("GET /manager", templ.Handler(pages.ManagerView()))
+	s.Router.HandleView("/inquiry", pages.Inquiry)
+	s.Router.HandleView("/manager", pages.ManagerView)
 
-	err := server.ListenAndServe()
+	err := s.Run()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-}
-
-func SetupAssetsRoutes(mux *http.ServeMux) {
-	isDevelopment := os.Getenv("GO_ENV") != "production"
-
-	assetHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if isDevelopment {
-			w.Header().Set("Cache-Control", "no-store")
-		}
-
-		var fs http.Handler
-		if isDevelopment {
-			fs = http.FileServer(http.Dir("./views/assets"))
-		} else {
-			fs = http.FileServer(http.FS(assets.Assets))
-		}
-
-		fs.ServeHTTP(w, r)
-	})
-
-	mux.Handle("GET /assets/", http.StripPrefix("/assets/", assetHandler))
 }

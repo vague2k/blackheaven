@@ -16,7 +16,7 @@ test:
 templ:
 	@templ generate --watch --proxy="localhost:3000" --open-browser=false
 
-server:
+air:
 	@air \
     --build.cmd "go build -o tmp/bin/main ./main.go" \
     --build.bin "tmp/bin/main" \
@@ -30,7 +30,7 @@ tailwind:
 	@tailwindcss -i ./views/assets/css/input.css -o ./views/assets/css/output.css --watch
 
 dev:
-	@make -j3 tailwind templ server
+	@make -j3 tailwind templ air
 
 components:
 	@templui add selectbox form input label textarea toast
