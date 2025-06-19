@@ -4,6 +4,7 @@ import "github.com/vague2k/blackheaven/views/components/selectbox"
 import "github.com/vague2k/blackheaven/views/components/textarea"
 import "github.com/vague2k/blackheaven/views/components/popover"
 import "github.com/vague2k/blackheaven/views/components/toast"
+import "github.com/vague2k/blackheaven/views/components/dropdown"
 
 templ BaseLayout() {
 	<!DOCTYPE html>
@@ -20,6 +21,7 @@ templ BaseLayout() {
 			@selectbox.Script()
 			@textarea.Script()
 			@popover.Script()
+			@dropdown.Script()
 			@toast.Script()
 			@ThemeSwitcherScript()
 		</head>

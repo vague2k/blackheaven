@@ -1,0 +1,151 @@
+package modules
+
+import "github.com/vague2k/blackheaven/views/components/separator"
+import "github.com/vague2k/blackheaven/views/components/table"
+import "github.com/vague2k/blackheaven/views/components/badge"
+import "github.com/vague2k/blackheaven/internal/database"
+import "github.com/vague2k/blackheaven/views/components/dropdown"
+import "github.com/vague2k/blackheaven/views/components/button"
+import "github.com/vague2k/blackheaven/views/components/icon"
+import "fmt"
+
+type ManagerTableProps struct {
+	Title       string
+	Description string
+	Inquiries   []database.Inquiry
+}
+
+templ ManagerTable(props ...ManagerTableProps) {
+	{{ var p ManagerTableProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div class="flex flex-col w-3/4 p-4 rounded-md">
+		<div class="flex flex-col pb-2">
+			<span class="font-medium text-xl">{ p.Title }</span>
+			<span class="text-sm">{ fmt.Sprintf("%d Inquiries", len(p.Inquiries)) }</span>
+		</div>
+		@separator.Separator()
+		@table.Table() {
+			@table.Header() {
+				@table.Row() {
+					@table.Head(table.HeadProps{
+						Class: "w-20",
+					}) {
+						Actions
+					}
+					@table.Head() {
+						Topic
+					}
+					@table.Head() {
+						Email
+					}
+					@table.Head() {
+						Name
+					}
+					@table.Head() {
+						Order
+					}
+					@table.Head() {
+						Subject
+					}
+					@table.Head() {
+						Content
+					}
+				}
+			}
+			@table.Body() {
+				for _, inq := range p.Inquiries {
+					@table.Row() {
+						@table.Cell() {
+							@actionDropdown(inq)
+						}
+						@table.Cell() {
+							@badge.Badge(badge.Props{
+								Class: topicVariants(inq.Topic),
+							}) {
+								{ inq.Topic }
+							}
+						}
+						@table.Cell() {
+							{ inq.Email }
+						}
+						@table.Cell() {
+							{ inq.Name }
+						}
+						@table.Cell() {
+							{ inq.OrderNumber }
+						}
+						@table.Cell() {
+							{ inq.Subject }
+						}
+						@table.Cell() {
+							{ inq.Content }
+						}
+					}
+				}
+			}
+		}
+	</div>
+}
+
+templ actionDropdown(inquiry database.Inquiry) {
+	@dropdown.Dropdown() {
+		@dropdown.Trigger() {
+			@button.Button(button.Props{
+				Class:   "h-7 text-xs",
+				Variant: button.VariantOutline,
+			}) {
+				Edit
+			}
+		}
+		@dropdown.Content(dropdown.ContentProps{
+			Class: "w-fit",
+		}) {
+			@dropdown.Label() {
+				Actions
+			}
+			@dropdown.Separator()
+			@dropdown.Group() {
+				@dropdown.Item() {
+					<span class="flex items-center">
+						@icon.Pencil(icon.Props{Size: 16, Class: "mr-2"})
+						Edit
+					</span>
+				}
+				@dropdown.Item() {
+					<span class="flex items-center">
+						@icon.Reply(icon.Props{Size: 16, Class: "mr-2"})
+						Reply with email
+					</span>
+				}
+				if inquiry.OrderNumber != "" {
+					@dropdown.Item() {
+						<span class="flex items-center">
+							@icon.Box(icon.Props{Size: 16, Class: "mr-2"})
+							View Order <span class="ml-1.5 text-blue-500">{ inquiry.OrderNumber }</span>
+						</span>
+					}
+				}
+			}
+			@dropdown.Separator()
+			@dropdown.Item() {
+				<span class="flex items-center text-destructive">
+					@icon.X(icon.Props{Size: 16, Class: "mr-2"})
+					Delete
+				</span>
+			}
+		}
+	}
+}
+
+func topicVariants(s string) string {
+	switch s {
+	case "order":
+		return "rounded-sm bg-purple-500 text-white"
+	case "submission":
+		return "rounded-sm bg-blue-500 text-white"
+	default:
+		return "rounded-sm bg-muted text-foreground"
+	}
+}
