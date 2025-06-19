@@ -8,6 +8,7 @@ import "github.com/vague2k/blackheaven/views/components/dropdown"
 import "github.com/vague2k/blackheaven/views/components/button"
 import "github.com/vague2k/blackheaven/views/components/icon"
 import "fmt"
+import "github.com/vague2k/blackheaven/utils"
 
 type ManagerTableProps struct {
 	Title       string
@@ -56,6 +57,7 @@ templ ManagerTable(props ...ManagerTableProps) {
 			}
 			@table.Body() {
 				for _, inq := range p.Inquiries {
+					// TODO: use alpine for opening elements from a row
 					@table.Row() {
 						@table.Cell() {
 							@actionDropdown(inq)
@@ -64,7 +66,7 @@ templ ManagerTable(props ...ManagerTableProps) {
 							@badge.Badge(badge.Props{
 								Class: topicVariants(inq.Topic),
 							}) {
-								{ inq.Topic }
+								{ utils.Capitalize(inq.Topic) }
 							}
 						}
 						@table.Cell() {
