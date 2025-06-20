@@ -16,6 +16,7 @@ type FormSelectBoxProps struct {
 	HasError              bool
 	Required              bool
 	Search                bool
+	Value                 string
 	SelectBoxTriggerProps selectbox.TriggerProps
 	Attributes            templ.Attributes
 	Options               []string
@@ -59,10 +60,15 @@ templ FormSelectBox(props ...FormSelectBoxProps) {
 				),
 				Required:   p.Required,
 				Attributes: p.SelectBoxTriggerProps.Attributes,
+				Value:      p.Value,
 			}) {
-				@selectbox.Value(selectbox.ValueProps{
-					Placeholder: p.Placeholder,
-				})
+				@selectbox.Value() {
+					if p.Value == "" {
+						{ p.Placeholder }
+					} else {
+						<span class="text-foreground">{ utils.Capitalize(p.Value) }</span>
+					}
+				}
 			}
 			@selectbox.Content(selectbox.ContentProps{
 				ID:       utils.ID(p.FormID, p.Name, "selectbox", "content"),

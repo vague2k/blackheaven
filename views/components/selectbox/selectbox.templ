@@ -41,6 +41,7 @@ type TriggerProps struct {
 	Multiple          bool
 	ShowPills         bool
 	SelectedCountText string
+	Value             string
 }
 
 type ValueProps struct {
@@ -173,6 +174,9 @@ templ Trigger(props ...TriggerProps) {
 				}
 				if p.HxReplaceUrl != "" {
 					hx-replace-url={ p.HxReplaceUrl }
+				}
+				if p.Value != "" {
+					value={ p.Value }
 				}
 			/>
 			{ children... }

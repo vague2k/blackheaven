@@ -48,6 +48,24 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 				"hx-swap-oob": "outerHTML:#inquiry-form-topic-element-container",
 			},
 		})
+	} else {
+		// FIXME: when this swaps, the pop over bugs out because of the previously error popover alreadyexisting in dom
+		// perhaps best way to show an "ok" state is to replace JUST the input itself
+		topicSelectbox = modules.FormSelectBox(modules.FormSelectBoxProps{
+			FormID:      formID,
+			Name:        "topic",
+			Class:       "w-1/2",
+			Label:       "Inquiry Topic",
+			Required:    true,
+			Value:       inquiry.Topic,
+			Description: "What kind of topic is it?",
+			Placeholder: "Select a topic",
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-topic-element-container",
+				"hx-swap":     "delete",
+				"hx-target":   "#inquiry-form-topic-selectbox-self-content",
+			},
+		})
 	}
 	if emailErr != nil {
 		formHasError = true
