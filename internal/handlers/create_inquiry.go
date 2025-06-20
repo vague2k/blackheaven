@@ -43,12 +43,7 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 			Required:    true,
 			Description: topicErr.Error(),
 			Placeholder: "Select a topic",
-			Options: modules.SelectBoxOptions{
-				"Submission": "submission",
-				"Release":    "release",
-				"Order":      "order",
-				"General":    "general",
-			},
+			Options:     []string{"general", "order", "submission"},
 			Attributes: templ.Attributes{
 				"hx-swap-oob": "outerHTML:#inquiry-form-topic-element-container",
 			},

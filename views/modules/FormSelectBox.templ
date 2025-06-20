@@ -6,8 +6,6 @@ import "github.com/vague2k/blackheaven/views/components/selectbox"
 import "github.com/vague2k/blackheaven/utils"
 import "github.com/vague2k/blackheaven/views/components/icon"
 
-type SelectBoxOptions map[string]string
-
 type FormSelectBoxProps struct {
 	FormID                string
 	Name                  string
@@ -17,11 +15,10 @@ type FormSelectBoxProps struct {
 	Class                 string
 	HasError              bool
 	Required              bool
-	FormLabelProps        form.LabelProps
-	FormDescProps         form.DescriptionProps
+	Search                bool
 	SelectBoxTriggerProps selectbox.TriggerProps
 	Attributes            templ.Attributes
-	Options               SelectBoxOptions
+	Options               []string
 }
 
 templ FormSelectBox(props ...FormSelectBoxProps) {
@@ -35,11 +32,8 @@ templ FormSelectBox(props ...FormSelectBoxProps) {
 		Attributes: p.Attributes,
 	}) {
 		@form.Label(form.LabelProps{
-			ID:            utils.ID(p.FormID, p.Name, "selectbox", "label"),
-			Class:         p.FormLabelProps.Class,
-			Attributes:    p.FormLabelProps.Attributes,
-			For:           p.FormID,
-			DisabledClass: p.FormLabelProps.DisabledClass,
+			ID:  utils.ID(p.FormID, p.Name, "selectbox", "label"),
+			For: p.FormID,
 		}) {
 			<p class="flex">
 				<span>{ p.Label }</span>
@@ -71,16 +65,17 @@ templ FormSelectBox(props ...FormSelectBoxProps) {
 				})
 			}
 			@selectbox.Content(selectbox.ContentProps{
-				ID: utils.ID(p.FormID, p.Name, "selectbox", "content"),
+				ID:       utils.ID(p.FormID, p.Name, "selectbox", "content"),
+				NoSearch: !p.Search,
 			}) {
 				@selectbox.Group(selectbox.GroupProps{
 					ID: utils.ID(p.FormID, p.Name, "selectbox", "group"),
 				}) {
-					for key, value := range p.Options {
+					for _, value := range p.Options {
 						@selectbox.Item(selectbox.ItemProps{
 							Value: value,
 						}) {
-							{ key }
+							{ utils.Capitalize(value) }
 						}
 					}
 				}
@@ -91,9 +86,7 @@ templ FormSelectBox(props ...FormSelectBoxProps) {
 			Class: utils.TwMerge(
 				"text-xs mt-2",
 				utils.If(p.HasError, "text-destructive"),
-				p.FormDescProps.Class,
 			),
-			Attributes: p.FormDescProps.Attributes,
 		}) {
 			{ p.Description }
 		}
