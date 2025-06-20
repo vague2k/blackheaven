@@ -7,18 +7,20 @@ import "github.com/vague2k/blackheaven/utils"
 import "github.com/vague2k/blackheaven/views/components/icon"
 
 type FormInputProps struct {
-	FormID         string
-	Name           string
-	Description    string
-	Label          string
-	Class          string
-	HasError       bool
-	HasNoError     bool
-	Required       bool
-	InputProps     input.Props
-	FormLabelProps form.LabelProps
-	FormDescProps  form.DescriptionProps
-	Attributes     templ.Attributes
+	FormID      string
+	Name        string
+	Description string
+	Label       string
+	Class       string
+	HasError    bool
+	HasNoError  bool
+	Required    bool
+	Value       string
+	Disabled    bool
+	FileAccept  string
+	Type        input.Type
+	Placeholder string
+	Attributes  templ.Attributes
 }
 
 templ FormInput(props ...FormInputProps) {
@@ -32,11 +34,8 @@ templ FormInput(props ...FormInputProps) {
 		Attributes: p.Attributes,
 	}) {
 		@form.Label(form.LabelProps{
-			ID:            utils.ID(p.FormID, p.Name, "input", "label"),
-			Class:         p.FormLabelProps.Class,
-			Attributes:    p.FormLabelProps.Attributes,
-			For:           p.FormID,
-			DisabledClass: p.FormLabelProps.DisabledClass,
+			ID:  utils.ID(p.FormID, p.Name, "input", "label"),
+			For: p.FormID,
 		}) {
 			<p class="flex">
 				<span>{ p.Label }</span>
@@ -51,28 +50,21 @@ templ FormInput(props ...FormInputProps) {
 			</p>
 		}
 		@input.Input(input.Props{
-			ID:               utils.ID(p.FormID, p.Name, "input", "self"),
-			Class:            utils.TwMerge("rounded-sm", p.InputProps.Class),
-			Attributes:       p.InputProps.Attributes,
-			Name:             p.Name,
-			Type:             p.InputProps.Type,
-			Placeholder:      p.InputProps.Placeholder,
-			Value:            p.InputProps.Value,
-			Disabled:         p.InputProps.Disabled,
-			Readonly:         p.InputProps.Readonly,
-			Required:         p.Required,
-			FileAccept:       p.InputProps.FileAccept,
-			HasError:         p.HasError,
-			NoTogglePassword: p.InputProps.NoTogglePassword,
+			ID:          utils.ID(p.FormID, p.Name, "input", "self"),
+			Name:        p.Name,
+			Placeholder: p.Placeholder,
+			Value:       p.Value,
+			Disabled:    p.Disabled,
+			Required:    p.Required,
+			FileAccept:  p.FileAccept,
+			HasError:    p.HasError,
 		})
 		@form.Description(form.DescriptionProps{
 			ID: utils.ID(p.FormID, p.Name, "input", "desc"),
 			Class: utils.TwMerge(
 				"text-xs mt-2",
 				utils.If(p.HasError, "text-destructive"),
-				utils.If(p.HasNoError, "text-success"),
-				p.FormDescProps.Class),
-			Attributes: p.FormDescProps.Attributes,
+				utils.If(p.HasNoError, "text-success")),
 		}) {
 			{ p.Description }
 		}

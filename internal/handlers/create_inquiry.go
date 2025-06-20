@@ -65,10 +65,8 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 			HasError:    true,
 			Required:    true,
 			Description: emailErr.Error(),
-			InputProps: input.Props{
-				Value:       inquiry.Email,
-				Placeholder: "johnsmith@email.com",
-			},
+			Value:       inquiry.Email,
+			Placeholder: "johnsmith@email.com",
 			Attributes: templ.Attributes{
 				"hx-swap-oob": "outerHTML:#inquiry-form-email-element-container",
 			},
@@ -82,10 +80,8 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 			HasNoError:  true,
 			Required:    true,
 			Description: "Looks good to me!",
-			InputProps: input.Props{
-				Value:       inquiry.Email,
-				Placeholder: "johnsmith@email.com",
-			},
+			Value:       inquiry.Email,
+			Placeholder: "johnsmith@email.com",
 			Attributes: templ.Attributes{
 				"hx-swap-oob": "outerHTML:#inquiry-form-email-element-container",
 			},
@@ -102,10 +98,8 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 			HasError:    true,
 			Required:    true,
 			Description: orderErr.Error(),
-			InputProps: input.Props{
-				Type:        input.TypeText,
-				Placeholder: "Order # here",
-			},
+			Type:        input.TypeText,
+			Placeholder: "Order # here",
 			Attributes: templ.Attributes{
 				"hx-swap-oob": "outerHTML:#inquiry-form-order-element-container",
 			},

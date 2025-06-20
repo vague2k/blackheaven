@@ -39,21 +39,17 @@ templ Inquiry() {
 							Label:       "Email",
 							Description: "Enter a valid email",
 							Required:    true,
-							InputProps: input.Props{
-								Placeholder: "johnsmith@email.com",
-							},
+							Placeholder: "johnsmith@email.com",
 						})
 					</div>
 					<div class="flex gap-x-3">
 						@modules.FormInput(modules.FormInputProps{
-							Class:  "w-1/2",
-							FormID: FormID,
-							Name:   "name",
-							Label:  "Name",
-							InputProps: input.Props{
-								Type:        input.TypeText,
-								Placeholder: "John Smith",
-							},
+							Class:       "w-1/2",
+							FormID:      FormID,
+							Name:        "name",
+							Label:       "Name",
+							Type:        input.TypeText,
+							Placeholder: "John Smith",
 						})
 						@modules.FormInput(modules.FormInputProps{
 							Class:       "w-1/2",
@@ -61,20 +57,16 @@ templ Inquiry() {
 							Name:        "order",
 							Label:       "Order #",
 							Description: "Required if your topic is about an order",
-							InputProps: input.Props{
-								Type:        input.TypeText,
-								Placeholder: "Order # here",
-							},
+							Type:        input.TypeText,
+							Placeholder: "Order # here",
 						})
 					</div>
 					@modules.FormInput(modules.FormInputProps{
-						FormID: FormID,
-						Name:   "subject",
-						Label:  "Subject",
-						InputProps: input.Props{
-							Type:        input.TypeText,
-							Placeholder: "Summarize your message",
-						},
+						FormID:      FormID,
+						Name:        "subject",
+						Label:       "Subject",
+						Type:        input.TypeText,
+						Placeholder: "Summarize your message",
 					})
 					@modules.FormTextarea(modules.FormTextareaProps{
 						FormID:   FormID,
