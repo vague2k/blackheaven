@@ -114,6 +114,19 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 				"hx-swap-oob": "outerHTML:#inquiry-form-order-element-container",
 			},
 		})
+	} else {
+		orderInput = modules.FormInput(modules.FormInputProps{
+			Class:       "w-1/2",
+			FormID:      formID,
+			Name:        "order",
+			Label:       "Order #",
+			Description: "Required if your topic is about an order",
+			Type:        input.TypeText,
+			Placeholder: "Order # here",
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-order-element-container",
+			},
+		})
 	}
 	if contentErr != nil {
 		formHasError = true
@@ -127,6 +140,21 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 			TextareaProps: textarea.Props{
 				Placeholder: "What do you have to say...",
 				AutoResize:  true,
+			},
+			Attributes: templ.Attributes{
+				"hx-swap-oob": "outerHTML:#inquiry-form-content-element-container",
+			},
+		})
+	} else {
+		contentTextarea = modules.FormTextarea(modules.FormTextareaProps{
+			FormID:   formID,
+			Name:     "content",
+			Label:    "Message",
+			Required: true,
+			TextareaProps: textarea.Props{
+				Placeholder: "What do you have to say...",
+				AutoResize:  true,
+				Value:       inquiry.Content,
 			},
 			Attributes: templ.Attributes{
 				"hx-swap-oob": "outerHTML:#inquiry-form-content-element-container",
