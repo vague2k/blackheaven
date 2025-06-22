@@ -9,6 +9,7 @@ import "github.com/vague2k/blackheaven/views/components/button"
 import "github.com/vague2k/blackheaven/views/components/icon"
 import "fmt"
 import "github.com/vague2k/blackheaven/utils"
+import "github.com/vague2k/blackheaven/views/components/drawer"
 
 type ManagerTableProps struct {
 	Title       string
@@ -31,9 +32,9 @@ templ ManagerTable(props ...ManagerTableProps) {
 			@table.Header() {
 				@table.Row() {
 					@table.Head(table.HeadProps{
-						Class: "w-20",
+						Class: "w-10",
 					}) {
-						Actions
+						{  }
 					}
 					@table.Head() {
 						Topic
@@ -95,10 +96,12 @@ templ actionDropdown(inquiry database.Inquiry) {
 	@dropdown.Dropdown() {
 		@dropdown.Trigger() {
 			@button.Button(button.Props{
-				Class:   "h-7 text-xs",
+				Class:   "h-7 px-1.5 text-xs",
 				Variant: button.VariantOutline,
 			}) {
-				Edit
+				@icon.Ellipsis(icon.Props{
+					Size: 16,
+				})
 			}
 		}
 		@dropdown.Content(dropdown.ContentProps{
@@ -109,20 +112,52 @@ templ actionDropdown(inquiry database.Inquiry) {
 			}
 			@dropdown.Separator()
 			@dropdown.Group() {
-				@dropdown.Item() {
-					<span class="flex items-center">
-						@icon.Pencil(icon.Props{Size: 16, Class: "mr-2"})
-						Edit
-					</span>
+				@dropdown.Item(dropdown.ItemProps{
+					PreventClose: true,
+				}) {
+					@drawer.Drawer(drawer.Props{
+						Class: "w-full",
+					}) {
+						@drawer.Trigger(drawer.TriggerProps{
+							Class: "w-full",
+						}) {
+							<span class="w-full flex items-center">
+								@icon.Pencil(icon.Props{Size: 16, Class: "mr-2"})
+								Edit
+							</span>
+						}
+						@drawer.Content(drawer.ContentProps{
+							Position: drawer.PositionRight,
+						}) {
+							@drawer.Header() {
+								@drawer.Title() {
+									Edit inquiry
+								}
+								@drawer.Description() {
+									Make changes to this inquiry here. Click save when you are done.
+								}
+							}
+							//@drawer.Close() {
+							//	Cancel
+							//}
+							//@button.Button() {
+							//	Save
+							//}
+						}
+					}
 				}
-				@dropdown.Item() {
+				@dropdown.Item(dropdown.ItemProps{
+					Class: "w-full cursor-pointer",
+				}) {
 					<span class="flex items-center">
 						@icon.Reply(icon.Props{Size: 16, Class: "mr-2"})
 						Reply with email
 					</span>
 				}
 				if inquiry.OrderNumber != "" {
-					@dropdown.Item() {
+					@dropdown.Item(dropdown.ItemProps{
+						Class: "w-full cursor-pointer",
+					}) {
 						<span class="flex items-center">
 							@icon.Box(icon.Props{Size: 16, Class: "mr-2"})
 							View Order <span class="ml-1.5 text-blue-500">{ inquiry.OrderNumber }</span>
@@ -131,7 +166,9 @@ templ actionDropdown(inquiry database.Inquiry) {
 				}
 			}
 			@dropdown.Separator()
-			@dropdown.Item() {
+			@dropdown.Item(dropdown.ItemProps{
+				Class: "w-full cursor-pointer",
+			}) {
 				<span class="flex items-center text-destructive">
 					@icon.X(icon.Props{Size: 16, Class: "mr-2"})
 					Delete

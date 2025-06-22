@@ -18,6 +18,6 @@ dev:
 	@make -j3 tailwind templ air
 
 components:
-	@templui add selectbox form input label textarea toast
+	@templui add selectbox separator form input label textarea toast table dropdown drawer icon
 
 vet: lint format test

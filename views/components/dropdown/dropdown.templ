@@ -1,4 +1,4 @@
-// templui component dropdown - version: v0.75.4 installed by templui v0.75.4
+// templui component dropdown - version: v0.75.6 installed by templui v0.75.6
 package dropdown
 
 import (
@@ -50,12 +50,13 @@ type LabelProps struct {
 }
 
 type ItemProps struct {
-	ID         string
-	Class      string
-	Attributes templ.Attributes
-	Disabled   bool
-	Href       string
-	Target     string
+	ID           string
+	Class        string
+	Attributes   templ.Attributes
+	Disabled     bool
+	Href         string
+	Target       string
+	PreventClose bool
 }
 
 type SeparatorProps struct {
@@ -231,6 +232,9 @@ templ Item(props ...ItemProps) {
 			}
 			role="menuitem"
 			data-dropdown-item
+			if p.PreventClose {
+				data-prevent-close="true"
+			}
 			{ p.Attributes... }
 		>
 			{ children... }
@@ -249,6 +253,9 @@ templ Item(props ...ItemProps) {
 			role="menuitem"
 			data-dropdown-item
 			disabled?={ p.Disabled }
+			if p.PreventClose {
+				data-prevent-close="true"
+			}
 			{ p.Attributes... }
 		>
 			{ children... }

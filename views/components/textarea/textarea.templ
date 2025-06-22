@@ -1,4 +1,4 @@
-// templui component textarea - version: v0.75.4 installed by templui v0.75.4
+// templui component textarea - version: v0.75.6 installed by templui v0.75.6
 package textarea
 
 import (
@@ -17,6 +17,8 @@ type Props struct {
 	AutoResize  bool
 	Disabled    bool
 	Required    bool
+	Readonly    bool
+
 }
 
 templ Textarea(props ...Props) {
@@ -41,6 +43,7 @@ templ Textarea(props ...Props) {
 		}
 		disabled?={ p.Disabled }
 		required?={ p.Required }
+		readonly?={ p.Readonly }
 		if p.AutoResize {
 			data-auto-resize="true"
 		}
