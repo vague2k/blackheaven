@@ -17,7 +17,7 @@ var (
 	ErrEmailRequired   = "Email is required"
 	ErrEmailInvalid    = "Email is invalid"
 	ErrContentRequired = "Message is required"
-	ErrOrderRequired   = "An order number is required if the topic is about an order"
+	ErrOrderRequired   = "Order number is required"
 )
 
 type Inquiry struct {

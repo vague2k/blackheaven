@@ -64,10 +64,11 @@ templ Inquiry() {
 						Placeholder: "Summarize your message",
 					})
 					@modules.FormTextarea(modules.FormTextareaProps{
-						FormID:   FormID,
-						Name:     "content",
-						Label:    "Message",
-						Required: true,
+						FormID:      FormID,
+						Name:        "content",
+						Label:       "Message",
+						Required:    true,
+						Description: "The box will expand as you type more if needed.",
 						TextareaProps: textarea.Props{
 							Placeholder: "What do you have to say...",
 							AutoResize:  true,
@@ -86,8 +87,10 @@ templ Inquiry() {
 					</div>
 					<div class="flex justify-between">
 						@button.Button(button.Props{
-							HxPost:   "/create-inquiry",
-							HxTarget: "#inquiry-form-toast",
+							Attributes: templ.Attributes{
+								"hx-post":   "/create-inquiry",
+								"hx-target": "#inquiry-form-toast",
+							},
 						}) {
 							Submit
 						}
@@ -97,5 +100,6 @@ templ Inquiry() {
 			</div>
 			<div id="inquiry-form-toast"></div>
 		</div>
+		@modules.HandleHTMXSwaps()
 	}
 }

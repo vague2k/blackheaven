@@ -122,6 +122,7 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 			Label:       "Order #",
 			Description: "Required if your topic is about an order",
 			Type:        input.TypeText,
+			Value:       inquiry.Order,
 			Placeholder: "Order # here",
 			Attributes: templ.Attributes{
 				"hx-swap-oob": "outerHTML:#inquiry-form-order-element-container",
@@ -132,11 +133,12 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 		formHasError = true
 		errs = append(errs, contentErr)
 		contentTextarea = modules.FormTextarea(modules.FormTextareaProps{
-			FormID:   formID,
-			Name:     "content",
-			Label:    "Message",
-			Required: true,
-			HasError: true,
+			FormID:      formID,
+			Name:        "content",
+			Label:       "Message",
+			Required:    true,
+			HasError:    true,
+			Description: contentErr.Error(),
 			TextareaProps: textarea.Props{
 				Placeholder: "What do you have to say...",
 				AutoResize:  true,
@@ -147,10 +149,11 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 		})
 	} else {
 		contentTextarea = modules.FormTextarea(modules.FormTextareaProps{
-			FormID:   formID,
-			Name:     "content",
-			Label:    "Message",
-			Required: true,
+			FormID:      formID,
+			Name:        "content",
+			Label:       "Message",
+			Required:    true,
+			Description: "The box will expand as you type more if needed.",
 			TextareaProps: textarea.Props{
 				Placeholder: "What do you have to say...",
 				AutoResize:  true,

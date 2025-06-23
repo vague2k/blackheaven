@@ -1,9 +1,10 @@
-// templui util templui.go - version: main installed by templui v0.73.2
+// templui util templui.go - version: v0.80.2 installed by templui v0.80.2
 package utils
 
 import (
-	"crypto/rand"
 	"fmt"
+
+	"crypto/rand"
 
 	"github.com/a-h/templ"
 

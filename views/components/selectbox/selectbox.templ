@@ -1,4 +1,4 @@
-// templui component selectbox - version: v0.75.6 installed by templui v0.75.6
+// templui component selectbox - version: v0.80.2 installed by templui v0.80.2
 package selectbox
 
 import (
@@ -30,14 +30,6 @@ type TriggerProps struct {
 	Required          bool
 	Disabled          bool
 	HasError          bool
-	HxGet             string
-	HxPost            string
-	HxPut             string
-	HxDelete          string
-	HxTrigger         string
-	HxTarget          string
-	HxSwap            string
-	HxReplaceUrl      string
 	Multiple          bool
 	ShowPills         bool
 	SelectedCountText string
@@ -150,34 +142,10 @@ templ Trigger(props ...TriggerProps) {
 				if p.Name != "" {
 					name={ p.Name }
 				}
-				required?={ p.Required }
-				if p.HxGet != "" {
-					hx-get={ p.HxGet }
-				}
-				if p.HxPost != "" {
-					hx-post={ p.HxPost }
-				}
-				if p.HxPut != "" {
-					hx-put={ p.HxPut }
-				}
-				if p.HxDelete != "" {
-					hx-delete={ p.HxDelete }
-				}
-				if p.HxTrigger != "" {
-					hx-trigger={ p.HxTrigger }
-				}
-				if p.HxTarget != "" {
-					hx-target={ p.HxTarget }
-				}
-				if p.HxSwap != "" {
-					hx-swap={ p.HxSwap }
-				}
-				if p.HxReplaceUrl != "" {
-					hx-replace-url={ p.HxReplaceUrl }
-				}
 				if p.Value != "" {
 					value={ p.Value }
 				}
+				required?={ p.Required }
 			/>
 			{ children... }
 			<span class="pointer-events-none ml-1">
