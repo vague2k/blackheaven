@@ -189,7 +189,11 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 		Dismissible: true,
 	}).Render(r.Context(), w)
 
+	// TODO: service should return err and the database.Inquiry that was created
 	services.CreateInquiry(inquiry)
+
+	// TODO: redirect to /inquiry/submit/{id}/success if the creation of the inquiry was successful
+	// w.Header().Add("Hx-Redirect", "/contacts")
 }
 
 func showInquiryErrorToast(title, description string, w http.ResponseWriter, r *http.Request) {

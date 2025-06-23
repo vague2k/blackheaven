@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/vague2k/blackheaven/views/assets"
 )
 
@@ -16,10 +17,13 @@ type Server struct {
 }
 
 func NewServer(port string) *Server {
-	return &Server{
+	s := &Server{
 		Port:   port,
 		Router: chi.NewRouter(),
 	}
+
+	s.Router.Use(middleware.Logger)
+	return s
 }
 
 // TODO: implement graceful shutdown
