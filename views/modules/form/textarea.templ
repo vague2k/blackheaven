@@ -1,4 +1,4 @@
-package modules
+package form
 
 import "github.com/vague2k/blackheaven/views/components/form"
 import "fmt"
@@ -6,22 +6,24 @@ import "github.com/vague2k/blackheaven/views/components/icon"
 import "github.com/vague2k/blackheaven/views/components/textarea"
 import "github.com/vague2k/blackheaven/utils"
 
-type FormTextareaProps struct {
-	FormID         string
-	Name           string
-	Description    string
-	Label          string
-	Class          string
-	HasError       bool
-	Required       bool
-	TextareaProps  textarea.Props
-	FormLabelProps form.LabelProps
-	FormDescProps  form.DescriptionProps
-	Attributes     templ.Attributes
+type TextareaProps struct {
+	FormID      string
+	Name        string
+	Description string
+	Label       string
+	Class       string
+	HasError    bool
+	Required    bool
+	Attributes  templ.Attributes
+	Placeholder string
+	AutoResize  bool
+	Rows        int
+	Value       string
+	Disabled    bool
 }
 
-templ FormTextarea(props ...FormTextareaProps) {
-	{{ var p FormTextareaProps }}
+templ Textarea(props ...TextareaProps) {
+	{{ var p TextareaProps }}
 	if len(props) > 0 {
 		{{ p = props[0] }}
 	}
@@ -31,11 +33,8 @@ templ FormTextarea(props ...FormTextareaProps) {
 		Attributes: p.Attributes,
 	}) {
 		@form.Label(form.LabelProps{
-			ID:            fmt.Sprintf("%s-%s-input-label", p.FormID, p.Name),
-			Class:         p.FormLabelProps.Class,
-			Attributes:    p.FormLabelProps.Attributes,
-			For:           p.FormID,
-			DisabledClass: p.FormLabelProps.DisabledClass,
+			ID:  fmt.Sprintf("%s-%s-input-label", p.FormID, p.Name),
+			For: p.FormID,
 		}) {
 			<p class="flex">
 				<span>{ p.Label }</span>
@@ -55,26 +54,21 @@ templ FormTextarea(props ...FormTextareaProps) {
 			Class: utils.TwMerge(
 				"focus:outline focus:outline-ring focus:outline-offset-1",
 				utils.If(p.HasError, "border-destructive focus:outline-destructive"),
-				p.TextareaProps.Class,
 			),
-			Placeholder: p.TextareaProps.Placeholder,
+			Placeholder: p.Placeholder,
 			Required:    p.Required,
-			AutoResize:  p.TextareaProps.AutoResize,
-			Rows:        p.TextareaProps.Rows,
-			Value:       p.TextareaProps.Value,
-			Disabled:    p.TextareaProps.Disabled,
-			Attributes:  p.TextareaProps.Attributes,
+			AutoResize:  p.AutoResize,
+			Rows:        p.Rows,
+			Value:       p.Value,
+			Disabled:    p.Disabled,
 		})
 		@form.Description(form.DescriptionProps{
 			ID: utils.ID(p.FormID, p.Name, "textarea", "desc"),
 			Class: utils.TwMerge(
 				"text-xs mt-2",
-				utils.If(p.HasError, "text-destructive"),
-				p.FormDescProps.Class),
-			Attributes: p.FormDescProps.Attributes,
+				utils.If(p.HasError, "text-destructive")),
 		}) {
 			{ p.Description }
 		}
 	}
-	@HandleHTMXSwaps()
 }

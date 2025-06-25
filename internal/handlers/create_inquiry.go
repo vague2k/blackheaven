@@ -24,17 +24,17 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 	orderInput := inquiryForm.IsTopicOrder()
 	contentTextarea := inquiryForm.IsContentEmpty()
 
-	// if form has any errors, render all components with erronous state,
-	// and render a toast with the first error from the list
+	// if the form has any errors, all components with an erronous state will be rendered
+	// and the handler will return early
+	render(w, r,
+		topicSelectbox,
+		emailInput,
+		orderInput,
+		contentTextarea,
+	)
 	errs := inquiryForm.ErrMsgs()
 	if len(errs) > 0 {
 		showToast("error", errs[0], w, r)
-		render(w, r,
-			topicSelectbox,
-			emailInput,
-			orderInput,
-			contentTextarea,
-		)
 		return
 	}
 

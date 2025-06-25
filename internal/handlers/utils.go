@@ -36,7 +36,7 @@ func scanForm(r *http.Request, dst any) error {
 }
 
 func render(w http.ResponseWriter, r *http.Request, components ...templ.Component) {
-	if components == nil || len(components) == 0 {
+	if len(components) == 0 {
 		return
 	}
 	for _, c := range components {

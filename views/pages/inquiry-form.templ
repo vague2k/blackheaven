@@ -3,9 +3,9 @@ package pages
 import (
 	"github.com/vague2k/blackheaven/views/components/button"
 	"github.com/vague2k/blackheaven/views/components/input"
-	"github.com/vague2k/blackheaven/views/components/textarea"
 	"github.com/vague2k/blackheaven/views/layouts"
 	"github.com/vague2k/blackheaven/views/modules"
+	"github.com/vague2k/blackheaven/views/modules/form"
 	"github.com/vague2k/blackheaven/views/components/icon"
 )
 
@@ -17,7 +17,7 @@ templ Inquiry() {
 			<div class="justify-center items-center min-w-lg">
 				<form class="space-y-5">
 					<div class="flex gap-x-3">
-						@modules.FormSelectBox(modules.FormSelectBoxProps{
+						@form.Selectbox(form.SelectboxProps{
 							Name:        "topic",
 							Class:       "w-1/2",
 							FormID:      FormID,
@@ -27,7 +27,7 @@ templ Inquiry() {
 							Placeholder: "Select a topic",
 							Options:     []string{"general", "order", "submission"},
 						})
-						@modules.FormInput(modules.FormInputProps{
+						@form.Input(form.InputProps{
 							FormID:      FormID,
 							Name:        "email",
 							Class:       "w-1/2",
@@ -38,7 +38,7 @@ templ Inquiry() {
 						})
 					</div>
 					<div class="flex gap-x-3">
-						@modules.FormInput(modules.FormInputProps{
+						@form.Input(form.InputProps{
 							Class:       "w-1/2",
 							FormID:      FormID,
 							Name:        "name",
@@ -46,7 +46,7 @@ templ Inquiry() {
 							Type:        input.TypeText,
 							Placeholder: "John Smith",
 						})
-						@modules.FormInput(modules.FormInputProps{
+						@form.Input(form.InputProps{
 							Class:       "w-1/2",
 							FormID:      FormID,
 							Name:        "order",
@@ -56,23 +56,21 @@ templ Inquiry() {
 							Placeholder: "Order # here",
 						})
 					</div>
-					@modules.FormInput(modules.FormInputProps{
+					@form.Input(form.InputProps{
 						FormID:      FormID,
 						Name:        "subject",
 						Label:       "Subject",
 						Type:        input.TypeText,
 						Placeholder: "Summarize your message",
 					})
-					@modules.FormTextarea(modules.FormTextareaProps{
+					@form.Textarea(form.TextareaProps{
 						FormID:      FormID,
 						Name:        "content",
 						Label:       "Message",
+						Description: "The message box will expand as you type",
 						Required:    true,
-						Description: "The box will expand as you type more if needed.",
-						TextareaProps: textarea.Props{
-							Placeholder: "What do you have to say...",
-							AutoResize:  true,
-						},
+						AutoResize:  true,
+						Placeholder: "What do you have to say...",
 					})
 					<div class="flex mb-4 items-center gap-x-3">
 						<span class="text-sm font-regular text-muted-foreground">

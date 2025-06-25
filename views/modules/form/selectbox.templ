@@ -1,4 +1,4 @@
-package modules
+package form
 
 import "github.com/vague2k/blackheaven/views/components/form"
 import "fmt"
@@ -6,7 +6,7 @@ import "github.com/vague2k/blackheaven/views/components/selectbox"
 import "github.com/vague2k/blackheaven/utils"
 import "github.com/vague2k/blackheaven/views/components/icon"
 
-type FormSelectBoxProps struct {
+type SelectboxProps struct {
 	FormID                string
 	Name                  string
 	Description           string
@@ -22,8 +22,8 @@ type FormSelectBoxProps struct {
 	Options               []string
 }
 
-templ FormSelectBox(props ...FormSelectBoxProps) {
-	{{ var p FormSelectBoxProps }}
+templ Selectbox(props ...SelectboxProps) {
+	{{ var p SelectboxProps }}
 	if len(props) > 0 {
 		{{ p = props[0] }}
 	}
@@ -97,5 +97,4 @@ templ FormSelectBox(props ...FormSelectBoxProps) {
 			{ p.Description }
 		}
 	}
-	@HandleHTMXSwaps()
 }

@@ -1,4 +1,4 @@
-package modules
+package form
 
 import "github.com/vague2k/blackheaven/views/components/input"
 import "github.com/vague2k/blackheaven/views/components/form"
@@ -6,7 +6,7 @@ import "fmt"
 import "github.com/vague2k/blackheaven/utils"
 import "github.com/vague2k/blackheaven/views/components/icon"
 
-type FormInputProps struct {
+type InputProps struct {
 	FormID      string
 	Name        string
 	Description string
@@ -23,8 +23,8 @@ type FormInputProps struct {
 	Attributes  templ.Attributes
 }
 
-templ FormInput(props ...FormInputProps) {
-	{{ var p FormInputProps }}
+templ Input(props ...InputProps) {
+	{{ var p InputProps }}
 	if len(props) > 0 {
 		{{ p = props[0] }}
 	}
@@ -69,5 +69,4 @@ templ FormInput(props ...FormInputProps) {
 			{ p.Description }
 		}
 	}
-	@HandleHTMXSwaps()
 }

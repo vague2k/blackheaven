@@ -11,8 +11,7 @@ import (
 	"strings"
 
 	"github.com/a-h/templ"
-	"github.com/vague2k/blackheaven/views/components/textarea"
-	"github.com/vague2k/blackheaven/views/modules"
+	"github.com/vague2k/blackheaven/views/modules/form"
 )
 
 var (
@@ -52,7 +51,7 @@ func (i *InquiryForm) IsValidTopic() templ.Component {
 		desc = ErrTopicRequired
 		i.errMsgs = append(i.errMsgs, desc)
 	}
-	return modules.FormSelectBox(modules.FormSelectBoxProps{
+	return form.Selectbox(form.SelectboxProps{
 		FormID:      formID,
 		Name:        "topic",
 		Class:       "w-1/2",
@@ -77,18 +76,16 @@ func (i *InquiryForm) IsContentEmpty() templ.Component {
 		desc = ErrContentRequired
 		i.errMsgs = append(i.errMsgs, desc)
 	}
-	return modules.FormTextarea(modules.FormTextareaProps{
+	return form.Textarea(form.TextareaProps{
 		FormID:      formID,
 		Name:        "content",
 		Label:       "Message",
 		Required:    true,
 		HasError:    hasError,
 		Description: desc,
-		TextareaProps: textarea.Props{
-			Placeholder: "What do you have to say...",
-			AutoResize:  true,
-			Value:       i.Content,
-		},
+		Placeholder: "What do you have to say...",
+		AutoResize:  true,
+		Value:       i.Content,
 		Attributes: templ.Attributes{
 			"hx-swap-oob": "outerHTML:#inquiry-form-content-element-container",
 		},
@@ -104,7 +101,7 @@ func (i *InquiryForm) IsTopicOrder() templ.Component {
 		desc = ErrOrderRequired
 		i.errMsgs = append(i.errMsgs, desc)
 	}
-	return modules.FormInput(modules.FormInputProps{
+	return form.Input(form.InputProps{
 		Class:       "w-1/2",
 		FormID:      formID,
 		Name:        "order",
@@ -132,7 +129,7 @@ func (i *InquiryForm) IsValidEmail() templ.Component {
 		desc = "Looks good to me!"
 		hasNoError = true
 	}
-	return modules.FormInput(modules.FormInputProps{
+	return form.Input(form.InputProps{
 		FormID:      formID,
 		Name:        "email",
 		Class:       "w-1/2",
