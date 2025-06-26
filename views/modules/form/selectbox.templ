@@ -16,6 +16,7 @@ type SelectboxProps struct {
 	HasError              bool
 	Required              bool
 	Search                bool
+	SearchPlaceholder     string
 	Value                 string
 	SelectBoxTriggerProps selectbox.TriggerProps
 	Attributes            templ.Attributes
@@ -71,8 +72,9 @@ templ Selectbox(props ...SelectboxProps) {
 				}
 			}
 			@selectbox.Content(selectbox.ContentProps{
-				ID:       utils.ID(p.FormID, p.Name, "selectbox", "content"),
-				NoSearch: !p.Search,
+				ID:                utils.ID(p.FormID, p.Name, "selectbox", "content"),
+				NoSearch:          !p.Search,
+				SearchPlaceholder: p.SearchPlaceholder,
 			}) {
 				@selectbox.Group(selectbox.GroupProps{
 					ID: utils.ID(p.FormID, p.Name, "selectbox", "group"),

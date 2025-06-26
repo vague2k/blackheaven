@@ -10,6 +10,7 @@ import "github.com/vague2k/blackheaven/views/components/icon"
 import "fmt"
 import "github.com/vague2k/blackheaven/utils"
 import "github.com/vague2k/blackheaven/views/components/drawer"
+import "github.com/vague2k/blackheaven/views/components/checkbox"
 
 type ManagerTableProps struct {
 	Title       string
@@ -31,10 +32,8 @@ templ ManagerTable(props ...ManagerTableProps) {
 		@table.Table() {
 			@table.Header() {
 				@table.Row() {
-					@table.Head(table.HeadProps{
-						Class: "w-10",
-					}) {
-						{  }
+					@table.Head() {
+						@checkbox.Checkbox()
 					}
 					@table.Head() {
 						Topic
@@ -61,7 +60,7 @@ templ ManagerTable(props ...ManagerTableProps) {
 					// TODO: use alpine for opening elements from a row
 					@table.Row() {
 						@table.Cell() {
-							@actionDropdown(inq)
+							@checkbox.Checkbox()
 						}
 						@table.Cell() {
 							@badge.Badge(badge.Props{
@@ -82,8 +81,13 @@ templ ManagerTable(props ...ManagerTableProps) {
 						@table.Cell() {
 							{ inq.Subject }
 						}
-						@table.Cell() {
+						@table.Cell(table.CellProps{
+							Class: "truncate max-w-56",
+						}) {
 							{ inq.Content }
+						}
+						@table.Cell() {
+							@actionDropdown(inq)
 						}
 					}
 				}
@@ -96,8 +100,8 @@ templ actionDropdown(inquiry database.Inquiry) {
 	@dropdown.Dropdown() {
 		@dropdown.Trigger() {
 			@button.Button(button.Props{
-				Class:   "h-7 px-1.5 text-xs",
-				Variant: button.VariantOutline,
+				Class:   "h-7 text-xs",
+				Variant: button.VariantGhost,
 			}) {
 				@icon.Ellipsis(icon.Props{
 					Size: 16,
@@ -115,36 +119,7 @@ templ actionDropdown(inquiry database.Inquiry) {
 				@dropdown.Item(dropdown.ItemProps{
 					PreventClose: true,
 				}) {
-					@drawer.Drawer(drawer.Props{
-						Class: "w-full",
-					}) {
-						@drawer.Trigger(drawer.TriggerProps{
-							Class: "w-full",
-						}) {
-							<span class="w-full flex items-center">
-								@icon.Pencil(icon.Props{Size: 16, Class: "mr-2"})
-								Edit
-							</span>
-						}
-						@drawer.Content(drawer.ContentProps{
-							Position: drawer.PositionRight,
-						}) {
-							@drawer.Header() {
-								@drawer.Title() {
-									Edit inquiry
-								}
-								@drawer.Description() {
-									Make changes to this inquiry here. Click save when you are done.
-								}
-							}
-							//@drawer.Close() {
-							//	Cancel
-							//}
-							//@button.Button() {
-							//	Save
-							//}
-						}
-					}
+					@editInquiryDrawer()
 				}
 				@dropdown.Item(dropdown.ItemProps{
 					Class: "w-full cursor-pointer",
@@ -164,16 +139,106 @@ templ actionDropdown(inquiry database.Inquiry) {
 						</span>
 					}
 				}
+				@dropdown.Item(dropdown.ItemProps{
+					PreventClose: true,
+				}) {
+					@viewInquiryContentDrawer(inquiry)
+				}
 			}
-			@dropdown.Separator()
-			@dropdown.Item(dropdown.ItemProps{
-				Class: "w-full cursor-pointer",
-			}) {
-				<span class="flex items-center text-destructive">
-					@icon.X(icon.Props{Size: 16, Class: "mr-2"})
-					Delete
-				</span>
+		}
+	}
+}
+
+templ editInquiryDrawer() {
+	@drawer.Drawer(drawer.Props{
+		Class: "w-full",
+	}) {
+		@drawer.Trigger(drawer.TriggerProps{
+			Class: "w-full",
+		}) {
+			<span class="w-full flex items-center">
+				@icon.Pencil(icon.Props{Size: 16, Class: "mr-2"})
+				Edit
+			</span>
+		}
+		@drawer.Content(drawer.ContentProps{
+			Position: drawer.PositionLeft,
+		}) {
+			@drawer.Header() {
+				@drawer.Title() {
+					Edit inquiry
+				}
+				@drawer.Description() {
+					Make changes to this inquiry here. Click save when you are done.
+				}
 			}
+		}
+	}
+}
+
+templ viewInquiryContentDrawer(inquiry database.Inquiry) {
+	@drawer.Drawer(drawer.Props{
+		Class: "w-full",
+	}) {
+		@drawer.Trigger(drawer.TriggerProps{
+			Class: "w-full",
+		}) {
+			<span class="w-full flex items-center">
+				@icon.MessageCircle(icon.Props{Size: 16, Class: "mr-2"})
+				View Content
+			</span>
+		}
+		@drawer.Content(drawer.ContentProps{
+			Position: drawer.PositionLeft,
+		}) {
+			<div class="h-full flex flex-col justify-between">
+				<div>
+					@drawer.Header() {
+						<div class="flex justify-between items-center">
+							@drawer.Title() {
+								Inquiry Content
+							}
+							@drawerButton(DrawerButtonProps{
+								Variant: VariantGhost,
+								Class:   "px-2.5 py-2",
+								Attributes: templ.Attributes{
+									"data-drawer-close": "",
+								},
+							}) {
+								<span class="flex justify-center items-center">
+									@icon.X(icon.Props{Size: 16})
+								</span>
+							}
+						</div>
+						@drawer.Description() {
+							Let's see what { inquiry.Name } had to say...
+						}
+					}
+					<p class="mb-5">{ inquiry.Content }</p>
+				</div>
+				<div class="flex flex-col justify-end gap-y-1">
+					@drawerButton(DrawerButtonProps{
+						Class: "w-full",
+					}) {
+						<span class="flex justify-center items-center">
+							@icon.Reply(icon.Props{Size: 16, Class: "mr-2"})
+							Reply with email
+						</span>
+					}
+					@drawerButton(DrawerButtonProps{
+						Class:   "w-full",
+						Variant: VariantSecondary,
+						Attributes: templ.Attributes{
+							"data-drawer-close": "",
+						},
+					}) {
+						<span class="flex justify-center items-center">
+							@icon.X(icon.Props{Size: 16, Class: "mr-2"})
+							Close
+						</span>
+					}
+				</div>
+			</div>
 		}
 	}
 }
