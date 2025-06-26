@@ -11,6 +11,7 @@ import "fmt"
 import "github.com/vague2k/blackheaven/utils"
 import "github.com/vague2k/blackheaven/views/components/drawer"
 import "github.com/vague2k/blackheaven/views/components/checkbox"
+import "github.com/vague2k/blackheaven/views/modules/form"
 
 type ManagerTableProps struct {
 	Title       string
@@ -119,7 +120,7 @@ templ actionDropdown(inquiry database.Inquiry) {
 				@dropdown.Item(dropdown.ItemProps{
 					PreventClose: true,
 				}) {
-					@editInquiryDrawer()
+					@editInquiryDrawer(inquiry)
 				}
 				@dropdown.Item(dropdown.ItemProps{
 					Class: "w-full cursor-pointer",
@@ -149,7 +150,7 @@ templ actionDropdown(inquiry database.Inquiry) {
 	}
 }
 
-templ editInquiryDrawer() {
+templ editInquiryDrawer(inquiry database.Inquiry) {
 	@drawer.Drawer(drawer.Props{
 		Class: "w-full",
 	}) {
@@ -164,14 +165,89 @@ templ editInquiryDrawer() {
 		@drawer.Content(drawer.ContentProps{
 			Position: drawer.PositionLeft,
 		}) {
-			@drawer.Header() {
-				@drawer.Title() {
-					Edit inquiry
-				}
-				@drawer.Description() {
-					Make changes to this inquiry here. Click save when you are done.
-				}
-			}
+			<div class="h-full flex flex-col justify-between">
+				<div>
+					@drawer.Header() {
+						@drawer.Title() {
+							Edit inquiry
+						}
+						@drawer.Description() {
+							Make changes to this inquiry here. Click save when you are done.
+						}
+					}
+					<form class="flex flex-col gap-y-4">
+						{{ const FormID = "manager-row" }}
+						<div class="flex gap-x-3">
+							<span class="w-1/2 text-red-500 font-bold">TODO: FIX BUTTON ISSUE WITH DRAWER</span>
+							@form.Input(form.InputProps{
+								FormID:      FormID,
+								Name:        "email",
+								Class:       "w-1/2",
+								Label:       "Email",
+								Value:       inquiry.Email,
+								Placeholder: "johnsmith@email.com",
+							})
+						</div>
+						<div class="flex gap-x-3">
+							@form.Input(form.InputProps{
+								FormID:      FormID,
+								Name:        "name",
+								Class:       "w-1/2",
+								Label:       "Name",
+								Value:       inquiry.Name,
+								Type:        "text",
+								Placeholder: "John Smith",
+							})
+							@form.Input(form.InputProps{
+								FormID:      FormID,
+								Name:        "order",
+								Label:       "Order #",
+								Class:       "w-1/2",
+								Value:       inquiry.OrderNumber,
+								Type:        "text",
+								Placeholder: "Order # here",
+							})
+						</div>
+						@form.Input(form.InputProps{
+							FormID:      FormID,
+							Name:        "subject",
+							Label:       "Subject",
+							Type:        "text",
+							Placeholder: "Summarize your message",
+						})
+						@form.Textarea(form.TextareaProps{
+							FormID:      FormID,
+							Name:        "content",
+							Label:       "Message",
+							Rows:        7,
+							Value:       inquiry.Content,
+							Placeholder: "What do you have to say...",
+						})
+					</form>
+				</div>
+				<div class="mt-4 flex flex-col justify-end gap-y-1">
+					@drawerButton(DrawerButtonProps{
+						Class: "w-full",
+					}) {
+						<span class="flex justify-center items-center">
+							@icon.Save(icon.Props{Size: 16, Class: "mr-2"})
+							Save changes
+						</span>
+					}
+					@drawerButton(DrawerButtonProps{
+						Class:   "w-full",
+						Variant: VariantSecondary,
+						Attributes: templ.Attributes{
+							"data-drawer-close": "",
+						},
+					}) {
+						<span class="flex justify-center items-center">
+							@icon.X(icon.Props{Size: 16, Class: "mr-2"})
+							Close
+						</span>
+					}
+				</div>
+			</div>
 		}
 	}
 }
