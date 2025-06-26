@@ -136,7 +136,7 @@ templ Content(props ...ContentProps) {
 		<div
 			class={
 				utils.TwMerge(
-					"h-full overflow-y-auto bg-background p-6 shadow-lg",
+					"h-full bg-blue-500 overflow-y-auto bg-background p-6 shadow-lg",
 					utils.If(p.Position == PositionRight, "border-l"),
 					utils.If(p.Position == PositionLeft, "border-r"),
 					utils.If(p.Position == PositionBottom, "border-t"),

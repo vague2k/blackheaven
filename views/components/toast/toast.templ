@@ -59,7 +59,7 @@ templ Toast(props ...Props) {
 		data-toast
 		data-duration={ strconv.Itoa(p.Duration) }
 		class={ utils.TwMerge(
-			"z-50 fixed pointer-events-auto p-4",
+			"z-50 fixed pointer-events-auto p-2",
 			"opacity-0 transform transition-all duration-300 ease-out",
 			utils.If(isTop, "top-0"),
 			utils.If(isBottom, "bottom-0"),
@@ -68,20 +68,22 @@ templ Toast(props ...Props) {
 			utils.If(p.Position == PositionTopRight || p.Position == PositionBottomRight, "right-0"),
 			utils.If(p.Position == PositionTopLeft || p.Position == PositionBottomLeft, "left-0"),
 			utils.If(p.Position == PositionTopCenter || p.Position == PositionBottomCenter, "left-1/2 -translate-x-1/2"),
-			"w-full md:max-w-[420px]",
+			"w-full md:max-w-[360px]",
 			p.Class,
 		) }
 		{ p.Attributes... }
 	>
-		<div class="w-full bg-background rounded-lg shadow-xs border pt-5 pb-4 px-4 flex items-center justify-center relative overflow-hidden">
+		<div class="w-full bg-popover rounded-md shadow-xs border border-foreground/10 p-4 flex items-center justify-center relative overflow-hidden">
 			if p.ShowIndicator {
 				@indicator(p)
 			}
-			if p.Icon {
-				@toastIcon(p)
-			}
 			<span class="flex-1 min-w-0">
-				@title(p)
+				<span class="flex items-center">
+					if p.Icon {
+						@toastIcon(p)
+					}
+					@title(p)
+				</span>
 				@description(p)
 			</span>
 			if p.Dismissible {
@@ -105,42 +107,38 @@ templ indicator(p Props) {
 
 templ toastIcon(p Props) {
 	if p.Variant == VariantSuccess {
-		@icon.CircleCheck(icon.Props{Size: 22, Class: "text-green-500 mr-3 flex-shrink-0"})
+		@icon.CircleCheck(icon.Props{Size: 13, Class: "text-green-500 mr-1.5 flex-shrink-0"})
 	} else if p.Variant == VariantError {
-		@icon.CircleX(icon.Props{Size: 22, Class: "text-red-500 mr-3 flex-shrink-0"})
+		@icon.CircleX(icon.Props{Size: 13, Class: "text-red-500 mr-1.5 flex-shrink-0"})
 	} else if p.Variant == VariantWarning {
-		@icon.TriangleAlert(icon.Props{Size: 22, Class: "text-yellow-500 mr-3 flex-shrink-0"})
+		@icon.TriangleAlert(icon.Props{Size: 13, Class: "text-yellow-500 mr-1.5 flex-shrink-0"})
 	} else if p.Variant == VariantInfo {
-		@icon.Info(icon.Props{Size: 22, Class: "text-blue-500 mr-3 flex-shrink-0"})
+		@icon.Info(icon.Props{Size: 13, Class: "text-blue-500 mr-1.5 flex-shrink-0"})
 	}
 }
 
 templ title(p Props) {
 	if p.Title != "" {
-		<p class="text-sm font-semibold truncate">{ p.Title }</p>
+		<p class="text-xs font-medium truncate">{ p.Title }</p>
 	}
 }
 
 templ description(p Props) {
 	if p.Description != "" {
-		<p class="text-sm opacity-90 mt-1">{ p.Description }</p>
+		<p class="text-xs opacity-90 mt-1">{ p.Description }</p>
 	}
 }
 
 templ dismissButton() {
 	@button.Button(button.Props{
-		Size:    button.SizeIcon,
-		Variant: button.VariantGhost,
+		Class: "h-6 px-2 rounded-sm font-regular text-xs",
 		Attributes: templ.Attributes{
 			"aria-label":         "Close",
 			"data-toast-dismiss": "",
 			"type":               "button",
 		},
 	}) {
-		@icon.X(icon.Props{
-			Size:  18,
-			Class: "opacity-75 hover:opacity-100",
-		})
+		Dismiss
 	}
 }
 

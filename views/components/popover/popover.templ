@@ -113,7 +113,7 @@ templ Content(props ...ContentProps) {
 			data-popover-match-width="true"
 		}
 		class={ utils.TwMerge(
-			"bg-background rounded-lg border text-sm shadow-lg pointer-events-auto absolute z-[9999] hidden top-0 left-0",
+			"bg-popover border border-foreground/15 text-popover-foreground relative z-[9999] min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md shadow-md pointer-events-auto hidden top-0 left-0",
 			p.Class,
 		) }
 		{ p.Attributes... }

@@ -18,7 +18,6 @@ type Props struct {
 	Disabled    bool
 	Required    bool
 	Readonly    bool
-
 }
 
 templ Textarea(props ...Props) {
@@ -50,13 +49,10 @@ templ Textarea(props ...Props) {
 		class={
 			utils.TwMerge(
 				"flex w-full px-3 py-2",
-				"min-h-[80px]", // Default min-height (adjust if needed)
-				"rounded-md border border-input bg-background text-sm",
-				"ring-offset-background",
-				"placeholder:text-muted-foreground",
-				"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-				"disabled:cursor-not-allowed disabled:opacity-50",
-				// Add overflow-hidden only if auto-resizing to prevent scrollbar flicker
+				"border-input placeholder:text-muted-foreground focus-visible:border-ring",
+				"focus-visible:ring-ring/50 dark:bg-input/30 min-h-[80px]",
+				"rounded-md border bg-transparent shadow-xs transition-[color,box-shadow]",
+				"outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
 				utils.If(p.AutoResize, "overflow-hidden resize-none"),
 				p.Class,
 			),
