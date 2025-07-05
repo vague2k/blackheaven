@@ -1,4 +1,4 @@
-// templui component selectbox - version: v0.80.2 installed by templui v0.80.2
+// templui component selectbox - version: v0.81.1 installed by templui v0.81.1
 package selectbox
 
 import (
@@ -9,7 +9,6 @@ import (
 	"github.com/vague2k/blackheaven/views/components/popover"
 	"github.com/vague2k/blackheaven/utils"
 	"strconv"
-	"github.com/vague2k/blackheaven/views/components/separator"
 )
 
 type contextKey string
@@ -92,9 +91,7 @@ templ SelectBox(props ...Props) {
 		class={ utils.TwMerge("select-container w-full relative", p.Class) }
 		{ p.Attributes... }
 	>
-		@popover.Popover() {
-			{ children... }
-		}
+		{ children... }
 	</div>
 }
 
@@ -222,9 +219,6 @@ templ Content(props ...ContentProps) {
 					/>
 				</div>
 			</div>
-			@separator.Separator(separator.Props{
-				Class: "border-t-blue-500",
-			})
 		}
 		<div class="max-h-[300px] overflow-y-auto">
 			{ children... }

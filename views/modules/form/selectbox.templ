@@ -7,20 +7,19 @@ import "github.com/vague2k/blackheaven/utils"
 import "github.com/vague2k/blackheaven/views/components/icon"
 
 type SelectboxProps struct {
-	FormID                string
-	Name                  string
-	Description           string
-	Label                 string
-	Placeholder           string
-	Class                 string
-	HasError              bool
-	Required              bool
-	Search                bool
-	SearchPlaceholder     string
-	Value                 string
-	SelectBoxTriggerProps selectbox.TriggerProps
-	Attributes            templ.Attributes
-	Options               []string
+	FormID            string
+	Name              string
+	Description       string
+	Label             string
+	Placeholder       string
+	Class             string
+	HasError          bool
+	Required          bool
+	Search            bool
+	SearchPlaceholder string
+	Value             string
+	Attributes        templ.Attributes
+	Options           []string
 }
 
 templ Selectbox(props ...SelectboxProps) {
@@ -35,7 +34,7 @@ templ Selectbox(props ...SelectboxProps) {
 	}) {
 		@form.Label(form.LabelProps{
 			ID:  utils.ID(p.FormID, p.Name, "selectbox", "label"),
-			For: p.FormID,
+			For: utils.ID(p.FormID, p.Name, "selectbox", "label"), // prevent misuse of for tag
 		}) {
 			<p class="flex">
 				<span>{ p.Label }</span>
@@ -59,9 +58,8 @@ templ Selectbox(props ...SelectboxProps) {
 					"focus:outline focus:outline-ring focus:outline-offset-1",
 					utils.If(p.HasError, "border-destructive focus:outline-destructive"),
 				),
-				Required:   p.Required,
-				Attributes: p.SelectBoxTriggerProps.Attributes,
-				Value:      p.Value,
+				Required: p.Required,
+				Value:    p.Value,
 			}) {
 				@selectbox.Value() {
 					if p.Value == "" {
