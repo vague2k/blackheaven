@@ -1,4 +1,4 @@
-// templui component badge - version: v0.80.2 installed by templui v0.80.2
+// templui component badge - version: v0.82.0 installed by templui v0.82.0
 package badge
 
 import "github.com/vague2k/blackheaven/utils"
@@ -24,16 +24,16 @@ templ Badge(props ...Props) {
 	if len(props) > 0 {
 		{{ p = props[0] }}
 	}
-	<div
+	<span
 		if p.ID != "" {
 			id={ p.ID }
 		}
 		class={
 			utils.TwMerge(
-				"inline-flex items-center justify-center rounded-md border px-2 py-0.5",
-				"text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1",
-				"[&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50",
-				"focus-visible:ring-[3px] transition-[color,box-shadow] overflow-hidden",
+				"inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none",
+				"focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+				"aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+				"transition-[color,box-shadow] overflow-hidden",
 				p.variantClasses(),
 				p.Class,
 			),
@@ -41,7 +41,7 @@ templ Badge(props ...Props) {
 		{ p.Attributes... }
 	>
 		{ children... }
-	</div>
+	</span>
 }
 
 func (p Props) variantClasses() string {

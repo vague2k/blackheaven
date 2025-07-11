@@ -1,4 +1,4 @@
-// templui component label - version: v0.80.2 installed by templui v0.80.2
+// templui component label - version: v0.82.0 installed by templui v0.82.0
 package label
 
 import "github.com/vague2k/blackheaven/utils"
@@ -25,10 +25,7 @@ templ Label(props ...Props) {
 		}
 		class={
 			utils.TwMerge(
-				"flex items-center gap-2 text-sm leading-none",
-				"font-medium select-none group-data-[disabled=true]:pointer-events-none",
-				"group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed",
-				"peer-disabled:opacity-50 text-sm font-medium leading-none inline-block",
+				"text-sm font-medium leading-none inline-block",
 				utils.If(len(p.Error) > 0, "text-destructive"),
 				p.Class,
 			),

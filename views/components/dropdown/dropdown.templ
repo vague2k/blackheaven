@@ -1,4 +1,4 @@
-// templui component dropdown - version: v0.81.1 installed by templui v0.81.1
+// templui component dropdown - version: v0.82.0 installed by templui v0.82.0
 package dropdown
 
 import (
@@ -156,6 +156,7 @@ templ Content(props ...ContentProps) {
 		Offset:    4,
 		Class: utils.TwMerge(
 			"z-50 rounded-md bg-popover p-1 shadow-md focus:outline-none overflow-auto",
+			"border border-border",
 			"min-w-[8rem]",
 			maxHeightClass,
 			p.Width,
@@ -240,7 +241,7 @@ templ Item(props ...ItemProps) {
 			class={
 				utils.TwMerge(
 					"w-full text-left flex items-center justify-between px-2 py-1.5 text-sm rounded-sm",
-					utils.If(!p.Disabled, "focus:bg-foreground/10 focus:text-accent-foreground hover:bg-foreground/10 hover:text-accent-foreground cursor-default"),
+					utils.If(!p.Disabled, "focus:bg-accent focus:text-accent-foreground hover:bg-accent hover:text-accent-foreground cursor-default"),
 					utils.If(p.Disabled, "opacity-50 pointer-events-none"),
 					p.Class,
 				),
@@ -267,7 +268,7 @@ templ Separator(props ...SeparatorProps) {
 		if p.ID != "" {
 			id={ p.ID }
 		}
-		class={ utils.TwMerge("h-[1px] my-1 w-full bg-foreground/15", p.Class) }
+		class={ utils.TwMerge("h-px my-1 -mx-1 bg-muted", p.Class) }
 		role="separator"
 		{ p.Attributes... }
 	></div>
