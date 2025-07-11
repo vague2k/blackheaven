@@ -7,6 +7,7 @@ import (
 	"github.com/vague2k/blackheaven/views/modules"
 	"github.com/vague2k/blackheaven/views/modules/form"
 	"github.com/vague2k/blackheaven/views/components/icon"
+	"fmt"
 )
 
 const FormID = "inquiry-form"
@@ -15,7 +16,14 @@ templ Inquiry() {
 	@layouts.BaseLayout() {
 		<div class="flex justify-center items-center h-screen">
 			<div class="justify-center items-center min-w-lg">
-				<form class="space-y-5">
+				<!-- novalidate attr on this form since we handle validation ourselves -->
+				<form
+					novalidate
+					hx-post="/create-inquiry"
+					hx-target="#inquiry-form-toast"
+					hx-disabled-elt="#inquiry-form-submit-button"
+					class="space-y-5"
+				>
 					<div class="flex gap-x-3">
 						@form.Selectbox(form.SelectboxProps{
 							Name:        "topic",
@@ -85,11 +93,17 @@ templ Inquiry() {
 					</div>
 					<div class="flex justify-between">
 						@button.Button(button.Props{
+							ID:   fmt.Sprintf("%s-submit-button", FormID),
+							Type: button.TypeSubmit,
 							Attributes: templ.Attributes{
-								"hx-post":   "/create-inquiry",
-								"hx-target": "#inquiry-form-toast",
+								"hx-indicator": "#spinner",
 							},
 						}) {
+							<span id="spinner" class="htmx-indicator">
+								@icon.LoaderCircle(icon.Props{
+									Class: "animate-spin",
+								})
+							</span>
 							Submit
 						}
 						@modules.ThemeSwitcher()

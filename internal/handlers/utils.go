@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/a-h/templ"
+	"github.com/vague2k/blackheaven/views/components/toast"
 )
 
 var ErrInternal = "Internal server error"
@@ -45,4 +46,22 @@ func render(w http.ResponseWriter, r *http.Request, components ...templ.Componen
 		}
 		c.Render(r.Context(), w)
 	}
+}
+
+func showToast(variant toast.Variant, description string, w http.ResponseWriter, r *http.Request) {
+	var title string
+	switch variant {
+	case "error":
+		title = "Form Error"
+	case "success":
+		title = "Form Successfully submitted"
+	}
+	toast.Toast(toast.Props{
+		Icon:        true,
+		Title:       title,
+		Description: description,
+		Variant:     variant,
+		Position:    "top-center",
+		Dismissible: true,
+	}).Render(r.Context(), w)
 }

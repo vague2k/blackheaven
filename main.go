@@ -14,6 +14,7 @@ func main() {
 	s.Router.Post("/create-inquiry", handlers.CreateInquiry)
 	// pages
 	s.Router.Handle("/inquiry", templ.Handler(pages.Inquiry()))
+	s.Router.Handle("/inquiry/submit-successful", templ.Handler(pages.FormSubmitSuccessful()))
 	s.Router.Handle("/manager", templ.Handler(pages.ManagerView()))
 
 	err := s.Run()

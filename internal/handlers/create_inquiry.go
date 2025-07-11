@@ -3,15 +3,16 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/vague2k/blackheaven/internal/models"
 	"github.com/vague2k/blackheaven/internal/services"
-	"github.com/vague2k/blackheaven/views/components/toast"
 )
 
 const formID = "inquiry-form"
 
 func CreateInquiry(w http.ResponseWriter, r *http.Request) {
+	time.Sleep(300 * time.Millisecond) // FIXME: DELETE THIS WHEN NOT IN DEV, MAKES BUTTON LOADING STATE OBVIOUS
 	inquiryForm := &models.InquiryForm{}
 
 	if err := scanForm(r, inquiryForm); err != nil {
@@ -24,17 +25,17 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 	orderInput := inquiryForm.IsTopicOrder()
 	contentTextarea := inquiryForm.IsContentEmpty()
 
-	// if the form has any errors, all components with an erronous state will be rendered
-	// and the handler will return early
-	render(w, r,
-		topicSelectbox,
-		emailInput,
-		orderInput,
-		contentTextarea,
-	)
+	// NOTE: render new state ONLY if there's any erroneous states present
+	// the "HX-Redirect" header needs to be the only thing returned from the resp to work properly
 	errs := inquiryForm.ErrMsgs()
-	if len(errs) > 0 {
+	if errs != nil {
 		showToast("error", errs[0], w, r)
+		render(w, r,
+			topicSelectbox,
+			emailInput,
+			orderInput,
+			contentTextarea,
+		)
 		return
 	}
 
@@ -42,29 +43,8 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 		inquiryForm.Subject = "New Message"
 	}
 
-	showToast("success", "Your form has been submitted", w, r)
-
 	// TODO: service should return err and the database.Inquiry that was created
 	services.CreateInquiry(inquiryForm)
 
-	// TODO: redirect to /inquiry/submit/{id}/success if the creation of the inquiry was successful
-	// w.Header().Add("Hx-Redirect", "/contacts")
-}
-
-func showToast(variant toast.Variant, description string, w http.ResponseWriter, r *http.Request) {
-	var title string
-	switch variant {
-	case "error":
-		title = "Form Error"
-	case "success":
-		title = "Form Successfully submitted"
-	}
-	toast.Toast(toast.Props{
-		Icon:        true,
-		Title:       title,
-		Description: description,
-		Variant:     variant,
-		Position:    "top-center",
-		Dismissible: true,
-	}).Render(r.Context(), w)
+	w.Header().Set("HX-Redirect", "/inquiry/submit-successful")
 }
