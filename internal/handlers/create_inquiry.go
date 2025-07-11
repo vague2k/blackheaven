@@ -46,5 +46,5 @@ func CreateInquiry(w http.ResponseWriter, r *http.Request) {
 	// TODO: service should return err and the database.Inquiry that was created
 	services.CreateInquiry(inquiryForm)
 
-	w.Header().Set("HX-Redirect", "/inquiry/submit-successful")
+	w.Header().Set("HX-Redirect", "/form/inquiry/successful")
 }

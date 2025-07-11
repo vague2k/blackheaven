@@ -11,10 +11,11 @@ func main() {
 	s := server.NewServer(":3000")
 	s.SetupAssets()
 	// service endpoints
-	s.Router.Post("/create-inquiry", handlers.CreateInquiry)
+	s.Router.Post("/form/inquiry/create", handlers.CreateInquiry)
 	// pages
-	s.Router.Handle("/inquiry", templ.Handler(pages.Inquiry()))
-	s.Router.Handle("/inquiry/submit-successful", templ.Handler(pages.FormSubmitSuccessful()))
+	s.Router.Handle("/form/inquiry", templ.Handler(pages.Inquiry()))
+	s.Router.Handle("/form/inquiry/successful", templ.Handler(pages.FormSubmitSuccessful()))
+
 	s.Router.Handle("/manager", templ.Handler(pages.ManagerView()))
 
 	err := s.Run()
