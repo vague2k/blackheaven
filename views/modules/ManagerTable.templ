@@ -91,6 +91,8 @@ templ ManagerTable(props ...ManagerTableProps) {
 							@actionDropdown(inq)
 						}
 					}
+					@editInquiryDrawerContent(inq)
+					@viewInquiryContentDrawerContent(inq)
 				}
 			}
 		}
@@ -117,18 +119,11 @@ templ actionDropdown(inquiry database.Inquiry) {
 			}
 			@dropdown.Separator()
 			@dropdown.Group() {
-				@dropdown.Item(dropdown.ItemProps{
-					PreventClose: true,
-				}) {
-					@editInquiryDrawer(inquiry)
+				@dropdown.Item() {
+					@editInquiryDrawerTrigger(inquiry)
 				}
-				@dropdown.Item(dropdown.ItemProps{
-					Class: "w-full cursor-pointer",
-				}) {
-					<span class="flex items-center">
-						@icon.Reply(icon.Props{Size: 16, Class: "mr-2"})
-						Reply with email
-					</span>
+				@dropdown.Item() {
+					@viewInquiryContentDrawerTrigger(inquiry)
 				}
 				if inquiry.OrderNumber != "" {
 					@dropdown.Item(dropdown.ItemProps{
@@ -141,16 +136,19 @@ templ actionDropdown(inquiry database.Inquiry) {
 					}
 				}
 				@dropdown.Item(dropdown.ItemProps{
-					PreventClose: true,
+					Class: "w-full cursor-pointer",
 				}) {
-					@viewInquiryContentDrawer(inquiry)
+					<span class="flex items-center">
+						@icon.Reply(icon.Props{Size: 16, Class: "mr-2"})
+						Reply with email
+					</span>
 				}
 			}
 		}
 	}
 }
 
-templ editInquiryDrawer(inquiry database.Inquiry) {
+templ editInquiryDrawerTrigger(inquiry database.Inquiry) {
 	{{ ID := fmt.Sprintf("edit-inquiry-drawer-%d", inquiry.ID) }}
 	@drawer.Trigger(drawer.TriggerProps{
 		Class: "w-full",
@@ -161,6 +159,10 @@ templ editInquiryDrawer(inquiry database.Inquiry) {
 			Edit
 		</span>
 	}
+}
+
+templ editInquiryDrawerContent(inquiry database.Inquiry) {
+	{{ ID := fmt.Sprintf("edit-inquiry-drawer-%d", inquiry.ID) }}
 	@drawer.Content(drawer.ContentProps{
 		ID:       ID,
 		Position: drawer.PositionLeft,
@@ -178,7 +180,15 @@ templ editInquiryDrawer(inquiry database.Inquiry) {
 				<form class="flex flex-col gap-y-4">
 					{{ const FormID = "manager-row" }}
 					<div class="flex gap-x-3">
-						<span class="w-1/2 text-red-500 font-bold">TODO: FIX BUTTON ISSUE WITH DRAWER</span>
+						@form.Selectbox(form.SelectboxProps{
+							FormID:      FormID,
+							Name:        "topic",
+							Class:       "w-1/2",
+							Label:       "Inquiry Topic",
+							Value:       inquiry.Topic,
+							Placeholder: "Select a topic",
+							Options:     []string{"general", "order", "submission"},
+						})
 						@form.Input(form.InputProps{
 							FormID:      FormID,
 							Name:        "email",
@@ -226,21 +236,13 @@ templ editInquiryDrawer(inquiry database.Inquiry) {
 				</form>
 			</div>
 			<div class="mt-4 flex flex-col justify-end gap-y-1">
-				@drawerButton(DrawerButtonProps{
-					Class: "w-full",
-				}) {
+				@button.Button() {
 					<span class="flex justify-center items-center">
 						@icon.Save(icon.Props{Size: 16, Class: "mr-2"})
 						Save changes
 					</span>
 				}
-				@drawerButton(DrawerButtonProps{
-					Class:   "w-full",
-					Variant: VariantSecondary,
-					Attributes: templ.Attributes{
-						"data-drawer-close": "",
-					},
-				}) {
+				@drawer.Close() {
 					<span class="flex justify-center items-center">
 						@icon.X(icon.Props{Size: 16, Class: "mr-2"})
 						Close
@@ -251,7 +253,7 @@ templ editInquiryDrawer(inquiry database.Inquiry) {
 	}
 }
 
-templ viewInquiryContentDrawer(inquiry database.Inquiry) {
+templ viewInquiryContentDrawerTrigger(inquiry database.Inquiry) {
 	{{ ID := fmt.Sprintf("inquiry-content-drawer-%d", inquiry.ID) }}
 	@drawer.Trigger(drawer.TriggerProps{
 		Class: "w-full",
@@ -262,6 +264,10 @@ templ viewInquiryContentDrawer(inquiry database.Inquiry) {
 			View Content
 		</span>
 	}
+}
+
+templ viewInquiryContentDrawerContent(inquiry database.Inquiry) {
+	{{ ID := fmt.Sprintf("inquiry-content-drawer-%d", inquiry.ID) }}
 	@drawer.Content(drawer.ContentProps{
 		Position: drawer.PositionLeft,
 		ID:       ID,
@@ -292,28 +298,14 @@ templ viewInquiryContentDrawer(inquiry database.Inquiry) {
 				<p class="mb-5">{ inquiry.Content }</p>
 			</div>
 			<div class="flex flex-col justify-end gap-y-1">
-				@drawerButton(DrawerButtonProps{
-					Class: "w-full",
-				}) {
+				@button.Button() {
 					<span class="flex justify-center items-center">
 						@icon.Reply(icon.Props{Size: 16, Class: "mr-2"})
 						Reply with email
 					</span>
 				}
-				//@button.Button(button.Props{
-				//	Class: "w-full",
-				//}) {
-				//	<span class="flex justify-center items-center">
-				//		@icon.Reply(icon.Props{Size: 16, Class: "mr-2"})
-				//		Reply with email
-				//	</span>
-				//}
-				@drawerButton(DrawerButtonProps{
-					Class:   "w-full",
-					Variant: VariantSecondary,
-					Attributes: templ.Attributes{
-						"data-drawer-close": "",
-					},
+				@drawer.Close(drawer.CloseProps{
+					For: ID,
 				}) {
 					<span class="flex justify-center items-center">
 						@icon.X(icon.Props{Size: 16, Class: "mr-2"})
